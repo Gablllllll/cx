@@ -89,10 +89,8 @@ session_start();
         <div class="sidebar-content">
             <ul class="sidebar-nav">
                 <li><a href="landingpage.php"><img src="Images/home-svgrepo-com.svg" alt="Home Icon"> Home</a></li>
-                <li><a href="calendar.php"><img src="Images/calendar-month-svgrepo-com.svg" alt="Calendar Icon"> Calendar</a></li>
+             
                 <li><a href="studentmodule.php" class="active"><img src="Images/book-svgrepo-com.svg" alt="Modules Icon"> Modules</a></li>
-                <li><a href="tutorlist.php"><img src="Images/user-svgrepo-com.svg" alt="Tutors Icon"> Tutor</a></li>
-                <li><a href="progress.php"><img src="Images/progress-svgrepo-com.svg" alt="Progress Icon">Progress</a></li>
             </ul>
             <div class="sidebar-bottom">
                 <ul class="sidebar-options">

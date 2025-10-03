@@ -1,21 +1,8 @@
-function openSignup(role) {
-    document.getElementById('signupRole').value = role;
-
-    // Show/hide parent-only fields
-    document.querySelectorAll('.parent-only').forEach(el => {
-        el.style.display = (role === 'parent') ? 'block' : 'none';
-    });
-    // Show/hide secretkey-only field
-    document.querySelectorAll('.secretkey-only').forEach(el => {
-        el.style.display = (role === 'parent') ? 'none' : 'block';
-    });
-
-    // Reset to step 1 when opening signup
+// Role selection removed; always sign up as student
+function openSignup() {
+    var roleInput = document.getElementById('signupRole');
+    if (roleInput) roleInput.value = 'student';
     resetSignupSteps();
-
-    // Hide role modal, show signup modal
-    var roleModal = bootstrap.Modal.getInstance(document.getElementById('roleModal'));
-    roleModal.hide();
     var signupModal = new bootstrap.Modal(document.getElementById('signupModal'));
     signupModal.show();
 }

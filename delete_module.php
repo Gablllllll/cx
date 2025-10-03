@@ -12,7 +12,7 @@ $material_id = intval($_GET['id']);
 $stmt = $conn->prepare("DELETE FROM learning_materials WHERE material_id = ? AND uploaded_by = ?");
 $stmt->bind_param("is", $material_id, $_SESSION['first_name']);
 if ($stmt->execute()) {
-    header("Location: tutormodule.php?upload=deleted");
+    header("Location: admin_modules.php?upload=deleted");
     exit;
 } else {
     echo "Failed to delete module. Error: " . $conn->error;

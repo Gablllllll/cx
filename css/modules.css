@@ -686,7 +686,7 @@ body.sidebar-hidden .main-content {
 
 /* Enhanced Word Popup */
 .word-popup {
-    position: absolute;
+    position: fixed;
     display: none;
     background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(20px);
@@ -695,7 +695,7 @@ body.sidebar-hidden .main-content {
     border: 1px solid rgba(255, 255, 255, 0.3);
     min-width: 350px;
     max-width: 450px;
-    z-index: 10000;
+    z-index: 100000;
     overflow: hidden;
     animation: popupSlideIn 0.3s ease-out;
 }

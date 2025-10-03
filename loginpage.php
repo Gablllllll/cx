@@ -10,31 +10,12 @@ if (isset($_POST['register'])) {
     $lastname = trim($_POST['lastname']);
     $username = trim($_POST['username']);
     $password = $_POST['password'];
-    $secretkey = isset($_POST['secretkey']) ? trim($_POST['secretkey']) : '';
+    $secretkey = '';
     $phonenumber = trim($_POST['phonenumber']);
     $email = trim($_POST['email']);
     $address = trim($_POST['address']);
     $birthday = trim($_POST['birthday']);
-    $role = isset($_POST['role']) ? $_POST['role'] : 'student';
-    if (empty($role) && !empty($_POST['secretkey'])) {
-        $role = 'tutor';
-    }
-    if (empty($role)) $role = 'student'; // Default to student if not set
-
-
-    if ($role === 'parent') {
-        $student_firstname = trim($_POST['student_firstname']);
-        $parent_secretkey = trim($_POST['parent_secretkey']);
-        $stmt = $conn->prepare("SELECT user_id FROM users WHERE first_name=? AND secret_key=? AND role='student'");
-        $stmt->bind_param("ss", $student_firstname, $parent_secretkey);
-        $stmt->execute();
-        $stmt->store_result();
-        if ($stmt->num_rows == 0) {
-            $signup_error = "No student found with that name and secret key.";
-        }
-        $stmt->close();
-        if (!empty($signup_error)) return;
-    }
+    $role = 'student';
 
     $stmt = $conn->prepare("SELECT user_id FROM users WHERE username=? OR email=?");
     $stmt->bind_param("ss", $username, $email);
@@ -74,10 +55,8 @@ if (isset($_POST['login'])) {
             $_SESSION['role'] = $role;
             $_SESSION['first_name'] = $first_name;
 
-            if ($role === 'tutor') {
-                header("Location: tutorlanding.php"); // Redirect to tutor dashboard
-            } elseif ($role === 'parent') {
-                header("Location: landingpage.php"); // Redirect to parent dashboard
+            if ($role === 'admin') {
+                header("Location: admin.php"); // Redirect to admin dashboard
             } elseif ($role === 'student') {
                 header("Location: landingpage.php"); // Redirect to student dashboard
             } else {
@@ -191,7 +170,7 @@ if (isset($_POST['login'])) {
                 </a>
             </li>
             <li>
-                <a href="#" data-bs-toggle="modal" data-bs-target="#roleModal">
+                <a href="#" data-bs-toggle="modal" data-bs-target="#signupModal">
                     <img src="Images/sign-add-svgrepo-com.svg" alt="Sign Up Icon" >
                     Sign Up
                 </a>
@@ -199,66 +178,7 @@ if (isset($_POST['login'])) {
         </ul>
     </div>
     <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
-    <div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="roleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content role-modal-content">
-                <div class="modal-header role-modal-header">
-                    <h1 class="modal-title role-modal-title">Choose Your Role</h1>
-                    <button type="button" class="btn-close role-close-btn" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body role-modal-body">
-                    <p class="role-description">Select the role that best describes you to get started with ClassXic</p>
-                    
-                    <div class="role-options">
-                        <div class="role-card" onclick="openSignup('student')">
-                            <div class="role-icon">
-                                <img src="Images/student.png" alt="Student Icon">
-                            </div>
-                            <div class="role-content">
-                                <h3 class="role-title">Student</h3>
-                                <p class="role-description-text">Join as a student to access learning materials, track progress, and collaborate with peers.</p>
-                            </div>
-                            <div class="role-arrow">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                        </div>
-                        
-                        <div class="role-card" onclick="openSignup('parent')">
-                            <div class="role-icon">
-                                <img src="Images/user-svgrepo-com.svg" alt="Parent Icon">
-                            </div>
-                            <div class="role-content">
-                                <h3 class="role-title">Parent</h3>
-                                <p class="role-description-text">Monitor your child's progress, communicate with tutors, and stay involved in their education.</p>
-                            </div>
-                            <div class="role-arrow">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                        </div>
-                        
-                        <div class="role-card" onclick="openSignup('tutor')">
-                            <div class="role-icon">
-                                <img src="Images/user-svgrepo-com.svg" alt="Tutor Icon">
-                            </div>
-                            <div class="role-content">
-                                <h3 class="role-title">Tutor</h3>
-                                <p class="role-description-text">Share your expertise, create content, and help students achieve their learning goals.</p>
-                            </div>
-                            <div class="role-arrow">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Role selection removed: default to Student sign up -->
 
  <!-- Signup Modal -->
     <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
@@ -320,11 +240,6 @@ if (isset($_POST['login'])) {
                         <!-- Step 2: Additional Information -->
                         <div id="step2" class="signup-step" style="display: none;">
                             <h5 class="mb-3 text-center">Additional Information</h5>
-                            <!-- Secret Key for student/tutor only -->
-                            <div class="mb-3 secretkey-only">
-                                <label for="secretkey" class="form-label">Secret Key</label>
-                                <input type="text" class="form-control" id="secretkey" name="secretkey" placeholder="Enter secret key">
-                            </div>
                             <div class="mb-3">
                                 <label for="phonenumber" class="form-label">Phone Number</label>
                                 <input type="text" class="form-control" id="phonenumber" name="phonenumber" placeholder="Type Here">
@@ -336,15 +251,6 @@ if (isset($_POST['login'])) {
                             <div class="mb-3">
                                 <label for="birthday" class="form-label">Birthday</label>
                                 <input type="date" class="form-control" id="birthday" name="birthday" placeholder="Select your birthday">
-                            </div>
-                            <!-- Parent fields only -->
-                            <div class="mb-3 parent-only" style="display:none;">
-                                <label for="student_firstname" class="form-label">Student's First Name</label>
-                                <input type="text" class="form-control" id="student_firstname" name="student_firstname" placeholder="Enter your child's first name">
-                            </div>
-                            <div class="mb-3 parent-only" style="display:none;">
-                                <label for="parent_secretkey" class="form-label">Student's Secret Key</label>
-                                <input type="text" class="form-control" id="parent_secretkey" name="parent_secretkey" placeholder="Enter the secret key given to your child">
                             </div>
                             <div class="form-check mb-3">
                                 <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
