@@ -8,7 +8,7 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="css/tutormodule.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
   <!-- Navbar -->
@@ -31,9 +31,9 @@ session_start();
   <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <ul>
-            <li><a href="tutorlanding.php"><img src="Images/home-svgrepo-com.svg" alt="Home Icon"> Home</a></li>
+            <li><a href="adminlanding.php"><img src="Images/home-svgrepo-com.svg" alt="Home Icon"> Home</a></li>
             <li><a href="tutorcalendar.php"><img src="Images/calendar-month-svgrepo-com.svg" alt="Calendar Icon"> Calendar</a></li>
-            <li><a href="tutormodule.php"><img src="Images/book-svgrepo-com.svg" alt="Modules Icon"> Modules</a></li>
+            <li><a href="admin_modules.php"><img src="Images/book-svgrepo-com.svg" alt="Modules Icon"> Modules</a></li>
             <li><a href="studentlist.php"><img src="Images/user-svgrepo-com.svg" alt="Tutors Icon"> Students</a></li>
 
             <li>

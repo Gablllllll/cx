@@ -26,10 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $query = "INSERT INTO learning_materials (title, description, file_url, uploaded_by, upload_date, is_approved, approved_by, approved_at)
                       VALUES ('$title', '$description', '$file_url', '$uploaded_by', '$upload_date', '$is_approved', '$approved_by', '$approved_at')";
             if (mysqli_query($conn, $query)) {
-                header("Location: tutormodule.php?upload=success");
+                header("Location: admin_modules.php?upload=success");
                 exit();
             } else {
-                header("Location: tutormodule.php?upload=fail");
+                header("Location: admin_modules.php?upload=fail");
                 exit();
             }
         } else {

@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.dropdown-toggle').forEach(item => {
         item.addEventListener('click', function(event) {
             event.preventDefault();
+            event.stopPropagation();
             const dropdownMenu = this.nextElementSibling;
             dropdownMenu.classList.toggle('active');
         });
@@ -40,26 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
         dropdowns.forEach(dropdown => {
             if (!dropdown.previousElementSibling.contains(event.target) && dropdown.classList.contains('active')) {
                 dropdown.classList.remove('active');
-            }
-        });
-    });
-    // Dropdown functionality
-    document.querySelectorAll('.dropdown-toggle').forEach(item => {
-        item.addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent the default anchor behavior
-            const dropdownMenu = this.nextElementSibling; // Get the dropdown menu
-            if (dropdownMenu) {
-                dropdownMenu.classList.toggle('active'); // Toggle the active class
-            }
-        });
-    });
-    
-    // Close the dropdown if clicked outside
-    document.addEventListener('click', function(event) {
-        const dropdowns = document.querySelectorAll('.dropdown-menu');
-        dropdowns.forEach(dropdown => {
-            if (dropdown.previousElementSibling && !dropdown.previousElementSibling.contains(event.target) && dropdown.classList.contains('active')) {
-                dropdown.classList.remove('active'); // Close the dropdown if clicked outside
             }
         });
     });
