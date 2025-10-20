@@ -78,7 +78,7 @@ if (isset($_POST['login'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Document</title>
+    <title>ClassXic</title>
     <link rel="stylesheet" href="css/loginpage.css">
 </head>
 <body>
@@ -146,13 +146,42 @@ if (isset($_POST['login'])) {
                 <div class="floating-card card-3">
                     <div class="card-icon">🤝</div>
                     <div class="card-content">
-                        <h4>Collaborative</h4>
-                        <p>Learn with peers</p>
+                        <h4>Accessible</h4>
+                        <p>Assistive technologies</p>
                     </div>
                 </div>
             </div>
             <h3 class="curve-text">Learning <span class="accent">Connects</span> Us All.</h3>
             <p class="subtitle">Empowering every student to reach their full potential</p>
+            
+            <!-- Sliding Paragraph Section -->
+            <div class="sliding-section">
+                <div class="sliding-container">
+                    <div class="sliding-content">
+                        <div class="slide active">
+                            <p>Dyslexia is a learning difference that affects reading, writing, and language processing. It’s not linked to intelligence but to how the brain interprets words and sounds. Raising awareness helps people understand that dyslexia can be managed with the right support.</p>
+                        </div>
+                        <div class="slide">
+                            <p>Students with dyslexia often face difficulties in traditional classrooms. With awareness, teachers can use tools like dyslexia-friendly fonts, assistive technology, and multisensory teaching to help them learn better.</p>
+                        </div>
+                        <div class="slide">
+                            <p>Awareness is also about recognizing the strengths of people with dyslexia. Many are creative thinkers and problem solvers who excel in art, innovation, and design.</p>
+                        </div>
+                        <div class="slide">
+                            <p>By spreading awareness and understanding, we can create a more inclusive environment where people with dyslexia feel supported, confident, and valued.</p>
+                        </div>
+                    </div>
+                    <!-- Invisible navigation hit areas -->
+                    <div class="slide-nav-btn prev" id="prevSlideBtn" aria-label="Previous slide"></div>
+                    <div class="slide-nav-btn next" id="nextSlideBtn" aria-label="Next slide"></div>
+                    <div class="sliding-indicators">
+                        <div class="indicator active" data-slide="0"></div>
+                        <div class="indicator" data-slide="1"></div>
+                        <div class="indicator" data-slide="2"></div>
+                        <div class="indicator" data-slide="3"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
   <!-- Sidebar -->

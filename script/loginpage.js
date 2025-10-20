@@ -106,15 +106,15 @@ function closeSidebar() {
 
 // Add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
+    const nextStepBtn = document.getElementById('nextStep');
+    const prevStepBtn = document.getElementById('prevStep');
     
-    if (nextBtn) {
-        nextBtn.addEventListener('click', nextStep);
+    if (nextStepBtn) {
+        nextStepBtn.addEventListener('click', nextStep);
     }
     
-    if (prevBtn) {
-        prevBtn.addEventListener('click', prevStep);
+    if (prevStepBtn) {
+        prevStepBtn.addEventListener('click', prevStep);
     }
 
     // Reset steps when modal is closed
@@ -211,6 +211,84 @@ document.addEventListener('DOMContentLoaded', function() {
                 featureModal.style.display = 'none';
             }
         });
+    }
+
+    // Sliding paragraph functionality
+    const slides = document.querySelectorAll('.slide');
+    const indicators = document.querySelectorAll('.indicator');
+    let currentSlide = 0;
+    let slideInterval;
+    const AUTO_SLIDE = true; // set to false to disable auto sliding
+    const SLIDE_INTERVAL_MS = 8000; // slower auto-slide interval (ms)
+
+    function showSlide(index) {
+        // Remove active class from all slides and indicators
+        slides.forEach(slide => slide.classList.remove('active'));
+        indicators.forEach(indicator => indicator.classList.remove('active'));
+        
+        // Add active class to current slide and indicator
+        slides[index].classList.add('active');
+        indicators[index].classList.add('active');
+        
+        currentSlide = index;
+    }
+
+    function nextSlide() {
+        const nextIndex = (currentSlide + 1) % slides.length;
+        showSlide(nextIndex);
+    }
+
+    function prevSlide() {
+        const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(prevIndex);
+    }
+
+    function startSliding() {
+        if (!AUTO_SLIDE) return;
+        slideInterval = setInterval(nextSlide, SLIDE_INTERVAL_MS);
+    }
+
+    function stopSliding() {
+        clearInterval(slideInterval);
+    }
+
+    // Add click event listeners to indicators
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            showSlide(index);
+            stopSliding();
+            startSliding(); // Restart auto-sliding
+        });
+    });
+
+    // Hook up invisible nav hit areas
+    const slideNextBtn = document.getElementById('nextSlideBtn');
+    const slidePrevBtn = document.getElementById('prevSlideBtn');
+    if (slideNextBtn) {
+        slideNextBtn.addEventListener('click', () => {
+            nextSlide();
+            stopSliding();
+            startSliding();
+        });
+    }
+    if (slidePrevBtn) {
+        slidePrevBtn.addEventListener('click', () => {
+            prevSlide();
+            stopSliding();
+            startSliding();
+        });
+    }
+
+    // Start auto-sliding when page loads
+    if (slides.length > 0) {
+        startSliding();
+        
+        // Pause sliding on hover, resume on mouse leave
+        const slidingSection = document.querySelector('.sliding-section');
+        if (slidingSection) {
+            slidingSection.addEventListener('mouseenter', stopSliding);
+            slidingSection.addEventListener('mouseleave', startSliding);
+        }
     }
 
     console.log('All event listeners set up successfully');

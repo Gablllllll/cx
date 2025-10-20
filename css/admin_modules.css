@@ -16,6 +16,7 @@ body { font-family: var(--font-body); }
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-bottom: 50px;
     padding: 1rem 2rem;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
@@ -106,6 +107,7 @@ body { font-family: var(--font-body); }
   
   .sidebar-bottom {
     margin-top: auto;
+    padding-bottom: 4.1rem;
     padding-top: 2rem;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     position: relative;
@@ -130,6 +132,7 @@ body { font-family: var(--font-body); }
     align-items: center;
     gap: 1rem;
     padding: 1rem 1.5rem;
+
     color: #2d3748;
     text-decoration: none;
     border-radius: 12px;
@@ -179,6 +182,7 @@ body { font-family: var(--font-body); }
       margin-top: 100px;          /* Maintain the top margin */
   }
   .dropdown-menu {
+   
       display: none;
       list-style: none;
       padding: 0;
