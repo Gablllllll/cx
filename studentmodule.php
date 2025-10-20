@@ -84,7 +84,7 @@ session_start();
         </div>
     </main>
 
-    <!-- Sidebar -->
+
     <div class="sidebar" id="sidebar">
         <div class="sidebar-content">
             <ul class="sidebar-nav">
@@ -92,6 +92,19 @@ session_start();
              
                 <li><a href="studentmodule.php" class="active"><img src="Images/book-svgrepo-com.svg" alt="Modules Icon"> Modules</a></li>
             </ul>
+            
+      
+            <div class="sidebar-calendar">
+                <div class="calendar-header">
+                    <button class="calendar-nav" id="prevMonth">&lt;</button>
+                    <span class="calendar-month-year" id="currentMonthYear"></span>
+                    <button class="calendar-nav" id="nextMonth">&gt;</button>
+                </div>
+                <div class="calendar-grid" id="calendarGrid">
+      
+                </div>
+            </div>
+            
             <div class="sidebar-bottom">
                 <ul class="sidebar-options">
                     <li>

@@ -107,11 +107,109 @@
     left: -400px;
   }
   
-  .sidebar-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Sidebar Calendar Styles */
+.sidebar-calendar {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.calendar-nav {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.calendar-nav:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+}
+
+.calendar-month-year {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2d3748;
+  text-align: center;
+  flex: 1;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.calendar-day-header {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #4a5568;
+  padding: 0.25rem 0;
+  background: rgba(72, 187, 120, 0.1);
+  border-radius: 4px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #2d3748;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.calendar-day:hover {
+  background: rgba(72, 187, 120, 0.2);
+  transform: scale(1.1);
+}
+
+.calendar-day.today {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.calendar-day.other-month {
+  color: #a0aec0;
+}
+
+.calendar-day.selected {
+  background: linear-gradient(135deg, #2f855a 0%, #276749 100%);
+  color: white;
+  font-weight: 600;
+}
   
   .sidebar-nav {
     list-style: none;
@@ -241,7 +339,7 @@
   }
   
   .dropdown-menu li a:hover {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+ 
       color: white;
       transform: translateX(5px);
   }
