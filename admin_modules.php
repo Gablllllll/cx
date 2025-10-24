@@ -4,7 +4,7 @@ session_start();
 
 // Admin-only access guard
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-  header("Location: loginpage.php");
+  header("Location: index.php");
   exit();
 }
 ?>
