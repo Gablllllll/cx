@@ -93,7 +93,10 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
       <div class="page-title">All Learning Materials</div>
       <br><br>
       <?php
-        $result = mysqli_query($conn, "SELECT material_id, title, description, file_url, uploaded_by, upload_date, is_approved, approved_by, approved_at FROM learning_materials ORDER BY approved_at DESC, upload_date DESC");
+        $result = mysqli_query($conn, "SELECT l.material_id, l.title, l.description, l.file_url, l.upload_date, l.uploaded_by_id, u.first_name, u.last_name 
+                                      FROM learning_materials l 
+                                      LEFT JOIN users u ON l.uploaded_by_id = u.user_id 
+                                      ORDER BY l.upload_date DESC");
         if ($result && mysqli_num_rows($result) > 0):
       ?>
       <div class="module-list">
@@ -102,7 +105,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
             <div class="header">
               <div class="title"><?php echo htmlspecialchars($row['title']); ?></div>
               <div class="meta">
-                <?php echo $row['approved_at'] ? date("M j, Y", strtotime($row['approved_at'])) : date("M j, Y", strtotime($row['upload_date'])); ?>
+                <?php echo date("M j, Y", strtotime($row['upload_date'])); ?>
               </div>
             </div>
             <div class="description">
@@ -110,12 +113,8 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
             </div>
             <div class="footer">
               <div class="meta">
-                Uploaded by: <?php echo htmlspecialchars($row['uploaded_by']); ?>
-                <?php if ((int)$row['is_approved'] === 1): ?>
-                  · Approved by: <?php echo htmlspecialchars($row['approved_by']); ?>
-                <?php else: ?>
-                  · Pending approval
-                <?php endif; ?>
+                Uploaded by: <?php echo htmlspecialchars($row['first_name']); ?>
+                · Approved by: SPLD Professional
               </div>
               <div class="actions">
                 <a href="modules.php?file_url=<?php echo urlencode($row['file_url']); ?>">View</a>

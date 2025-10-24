@@ -5,11 +5,8 @@ session_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
     $description = $_POST['description'];
-    $uploaded_by = 'tutor'; // Default for now
     $upload_date = date('Y-m-d H:i:s');
-    $is_approved = 1; // Default to approved
-    $approved_by = 'admin'; // Default for now
-    $approved_at = $upload_date;
+    $uploaded_by_id = $_SESSION['user_id']; // Get the admin user ID from session
 
     // Handle file upload
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
@@ -23,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             move_uploaded_file($file_tmp, $file_url);
 
             // Insert into database
-            $query = "INSERT INTO learning_materials (title, description, file_url, uploaded_by, upload_date, is_approved, approved_by, approved_at)
-                      VALUES ('$title', '$description', '$file_url', '$uploaded_by', '$upload_date', '$is_approved', '$approved_by', '$approved_at')";
+            $query = "INSERT INTO learning_materials (title, description, file_url, upload_date, uploaded_by_id)
+                      VALUES ('$title', '$description', '$file_url', '$upload_date', '$uploaded_by_id')";
             if (mysqli_query($conn, $query)) {
                 header("Location: admin_modules.php?upload=success");
                 exit();

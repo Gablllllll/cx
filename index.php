@@ -10,7 +10,7 @@ if (isset($_POST['register'])) {
     $lastname = trim($_POST['lastname']);
     $username = trim($_POST['username']);
     $password = $_POST['password'];
-    $secretkey = '';
+
     $phonenumber = trim($_POST['phonenumber']);
     $email = trim($_POST['email']);
     $address = trim($_POST['address']);
@@ -25,8 +25,8 @@ if (isset($_POST['register'])) {
         $signup_error = "Username or email already exists.";
     } else {
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("INSERT INTO users (username, role, first_name, last_name, email, password_hash, secret_key, contact_number, address, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssssssss", $username, $role, $firstname, $lastname, $email, $password_hash, $secretkey, $phonenumber, $address, $birthday);
+        $stmt = $conn->prepare("INSERT INTO users (username, role, first_name, last_name, email, password_hash, contact_number, address, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssssss", $username, $role, $firstname, $lastname, $email, $password_hash, $phonenumber, $address, $birthday);
         if ($stmt->execute()) {
             $signup_success = "Registration successful! You can now log in.";
         } else {
