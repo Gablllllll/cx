@@ -36,12 +36,15 @@ session_start();
         <div class="content-wrapper">
             <div class="page-header">
                 <h1>Student Modules</h1>
-                <p>Access approved learning materials and resources</p>
+                <p>Access learning materials and resources</p>
             </div>
 
             <!-- Module List Container -->
             <?php
-            $query = "SELECT material_id, title, uploaded_by, approved_at, file_url FROM learning_materials WHERE is_approved = 1 ORDER BY approved_at DESC";
+            $query = "SELECT l.material_id, l.title, l.description, l.file_url, l.upload_date, u.first_name, u.last_name 
+                      FROM learning_materials l 
+                      LEFT JOIN users u ON l.uploaded_by_id = u.user_id 
+                      ORDER BY l.upload_date DESC";
 
             $result = mysqli_query($conn, $query);
 
@@ -55,15 +58,18 @@ session_start();
                     echo '<div class="module-header">';
                     echo '  <div class="module-user">';
                     echo '      <img src="Images/user-svgrepo-com.svg" alt="User Icon" class="module-user-icon">';
-                    echo '      <span class="module-user-name">' . htmlspecialchars($row['uploaded_by']) . '</span>';
+                    echo '      <span class="module-user-name">' . htmlspecialchars($row['first_name']) . '</span>';
                     echo '      <img src="Images/verified.png" alt="Verified" class="module-verified-icon">';
                     echo '  </div>';
-                    echo '  <div class="module-date">' . date("F j, Y", strtotime($row['approved_at'])) . '</div>';
+                    echo '  <div class="module-date">' . date("F j, Y", strtotime($row['upload_date'])) . '</div>';
                     echo '</div>';
                     
                     // Module Body
                     echo '<div class="module-body">';
                     echo '  <div class="module-title">' . htmlspecialchars($row['title']) . '</div>';
+                    if (!empty($row['description'])) {
+                        echo '  <div class="module-description">' . htmlspecialchars($row['description']) . '</div>';
+                    }
                     echo '  <div class="module-actions">';
                     echo '      <a href="modules.php?file_url=' . urlencode($row['file_url']) . '" class="module-view-btn">View Module</a>';
                     echo '  </div>';
@@ -77,7 +83,7 @@ session_start();
                 echo '<div class="empty-state">';
                 echo '  <div class="empty-icon">📚</div>';
                 echo '  <h3>No Modules Available</h3>';
-                echo '  <p>No approved learning materials are currently available. Check back later for new content.</p>';
+                echo '  <p>No learning materials are currently available. Check back later for new content.</p>';
                 echo '</div>';
             }
             ?>

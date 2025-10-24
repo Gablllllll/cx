@@ -7,6 +7,59 @@ if (!isset($_GET['file_url'])) {
 }
 
 $file_url = urldecode($_GET['file_url']);
+
+// Get material information
+$material_query = "SELECT material_id, title FROM learning_materials WHERE file_url = ?";
+$material_stmt = $conn->prepare($material_query);
+$material_stmt->bind_param("s", $file_url);
+$material_stmt->execute();
+$material_result = $material_stmt->get_result();
+$material_data = $material_result->fetch_assoc();
+$material_stmt->close();
+
+if (!$material_data) {
+    die("Module not found.");
+}
+
+$material_id = $material_data['material_id'];
+$material_title = $material_data['title'];
+
+// Get user's existing feedback
+$user_feedback = null;
+if (isset($_SESSION['user_id'])) {
+    $feedback_query = "SELECT rating, comment FROM feedback WHERE user_id = ? AND material_id = ?";
+    $feedback_stmt = $conn->prepare($feedback_query);
+    $feedback_stmt->bind_param("ii", $_SESSION['user_id'], $material_id);
+    $feedback_stmt->execute();
+    $feedback_result = $feedback_stmt->get_result();
+    $user_feedback = $feedback_result->fetch_assoc();
+    $feedback_stmt->close();
+}
+
+// Get all feedback for this material
+$all_feedback_query = "SELECT u.first_name, f.rating, f.comment, f.created_at 
+                      FROM feedback f 
+                      JOIN users u ON f.user_id = u.user_id 
+                      WHERE f.material_id = ? 
+                      ORDER BY f.created_at DESC";
+$all_feedback_stmt = $conn->prepare($all_feedback_query);
+$all_feedback_stmt->bind_param("i", $material_id);
+$all_feedback_stmt->execute();
+$all_feedback_result = $all_feedback_stmt->get_result();
+$all_feedback = $all_feedback_result->fetch_all(MYSQLI_ASSOC);
+$all_feedback_stmt->close();
+
+// Calculate average rating
+$avg_rating_query = "SELECT AVG(rating) as avg_rating, COUNT(*) as total_feedback FROM feedback WHERE material_id = ?";
+$avg_stmt = $conn->prepare($avg_rating_query);
+$avg_stmt->bind_param("i", $material_id);
+$avg_stmt->execute();
+$avg_result = $avg_stmt->get_result();
+$avg_data = $avg_result->fetch_assoc();
+$avg_stmt->close();
+
+$average_rating = $avg_data['avg_rating'] ? round($avg_data['avg_rating'], 1) : 0;
+$total_feedback = $avg_data['total_feedback'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -126,10 +179,158 @@ $file_url = urldecode($_GET['file_url']);
                 </button>
             </div>
         </div>
+
+        <!-- Feedback Section -->
+        <div class="feedback-section">
+            <div class="feedback-header">
+                <h2>Module Feedback</h2>
+                <div class="rating-summary">
+                    <div class="average-rating">
+                        <span class="rating-stars">
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <span class="star <?php echo $i <= $average_rating ? 'filled' : ''; ?>">★</span>
+                            <?php endfor; ?>
+                        </span>
+                        <span class="rating-value"><?php echo $average_rating; ?>/5</span>
+                        <span class="rating-count">(<?php echo $total_feedback; ?> feedback)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feedback Form -->
+            <div class="feedback-form-container">
+                <h3>Share Your Feedback</h3>
+                <form id="feedbackForm" class="feedback-form">
+                    <input type="hidden" id="material_id" value="<?php echo $material_id; ?>">
+                    
+                    <div class="form-group">
+                        <label>Rate this module:</label>
+                        <div class="star-rating">
+                            <?php for ($i = 5; $i >= 1; $i--): ?>
+                                <input type="radio" id="star<?php echo $i; ?>" name="rating" value="<?php echo $i; ?>" 
+                                       <?php echo ($user_feedback && $user_feedback['rating'] == $i) ? 'checked' : ''; ?>>
+                                <label for="star<?php echo $i; ?>" class="star-label">★</label>
+                            <?php endfor; ?>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="comment">Comment (optional):</label>
+                        <textarea id="comment" name="comment" rows="4" placeholder="Share your thoughts about this module..."><?php echo htmlspecialchars($user_feedback['comment'] ?? ''); ?></textarea>
+                    </div>
+                    
+                    <button type="submit" class="feedback-submit-btn">
+                        <?php echo $user_feedback ? 'Update Feedback' : 'Submit Feedback'; ?>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Existing Feedback Display -->
+            <?php if (!empty($all_feedback)): ?>
+            <div class="feedback-list">
+                <h3>Student Feedback</h3>
+                <div class="feedback-items">
+                    <?php foreach ($all_feedback as $feedback): ?>
+                    <div class="feedback-item">
+                        <div class="feedback-user">
+                            <span class="user-name"><?php echo htmlspecialchars($feedback['first_name']); ?></span>
+                            <div class="feedback-rating">
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <span class="star <?php echo $i <= $feedback['rating'] ? 'filled' : ''; ?>">★</span>
+                                <?php endfor; ?>
+                            </div>
+                            <span class="feedback-date"><?php echo date("M j, Y", strtotime($feedback['created_at'])); ?></span>
+                        </div>
+                        <?php if (!empty($feedback['comment'])): ?>
+                        <div class="feedback-comment">
+                            <?php echo htmlspecialchars($feedback['comment']); ?>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.min.js"></script>
     <script src="script/modules.js"></script>
+    <script>
+        // Feedback functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const feedbackForm = document.getElementById('feedbackForm');
+            
+            if (feedbackForm) {
+                feedbackForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(feedbackForm);
+                    const materialId = document.getElementById('material_id').value;
+                    
+                    // Add material_id to form data
+                    formData.append('material_id', materialId);
+                    
+                    // Show loading state
+                    const submitBtn = feedbackForm.querySelector('.feedback-submit-btn');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.textContent = 'Submitting...';
+                    submitBtn.disabled = true;
+                    
+                    fetch('feedback_handler.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Show success message
+                            showFeedbackMessage(data.message, 'success');
+                            // Reload page to show updated feedback
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1500);
+                        } else {
+                            showFeedbackMessage(data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showFeedbackMessage('An error occurred. Please try again.', 'error');
+                    })
+                    .finally(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    });
+                });
+            }
+        });
+        
+        function showFeedbackMessage(message, type) {
+            // Remove existing message if any
+            const existingMessage = document.querySelector('.feedback-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            // Create message element
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `feedback-message ${type}`;
+            messageDiv.textContent = message;
+            
+            // Insert after feedback form
+            const feedbackFormContainer = document.querySelector('.feedback-form-container');
+            feedbackFormContainer.appendChild(messageDiv);
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                messageDiv.style.opacity = '0';
+                setTimeout(() => {
+                    messageDiv.remove();
+                }, 300);
+            }, 3000);
+        }
+    </script>
     <script>
         // Sidebar functionality - moved to top so it's available immediately
        
