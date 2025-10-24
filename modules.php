@@ -232,6 +232,8 @@ $file_url = urldecode($_GET['file_url']);
 					they: 'Pronoun referring to one or more people or things; also singular gender-neutral.',
 					it: 'Pronoun referring to a thing, animal, idea, or situation.',
 					and: 'Coordinating conjunction connecting words, phrases, or clauses of equal rank.',
+					the: 'Definite article used before a noun to specify a particular one.',
+					for: 'Preposition meaning intended for, in support of, or because of.',
 					i: 'First-person singular pronoun used by the speaker.',
 					me: 'First-person singular objective pronoun (object form of “I”).',
 					we: 'First-person plural pronoun used by the speaker and others.',

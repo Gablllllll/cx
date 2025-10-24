@@ -105,14 +105,15 @@ if (isset($_POST['login'])) {
                 <span> Welcome to ClassXic</span>
             </div>
             <h2>
-                Let's <span class="green">Grow</span> Together and <br /> 
-                <span class="highlight">Learn From Each Other</span>
+                <span class="green">Welcome to</span> <span style="color: #333;">ClassXic</span> <span class="green">learning</span><br /> 
+                <span class="highlight"> Management System</span>
             </h2>
             <p>
-                Our innovative learning space empowers students to share ideas,
-                build essential skills, and grow side by side — because learning 
-                is better when we work as a team. Experience education reimagined 
-                for the modern learner.
+                ClassXic is a specialized Learning Management System designed to support 
+                students with dyslexia and other learning differences. Our platform 
+                provides accessible learning materials, assistive technologies, and 
+                dyslexia-friendly features to help every student succeed in their 
+                educational journey.
             </p>
             <div class="cta-buttons">
                 <button class="hire-button primary-btn">

@@ -1,6 +1,82 @@
 <?php
 include "myconnector.php";
 session_start();
+
+// Handle profile updates
+$profile_update_success = "";
+$profile_update_error = "";
+
+if (isset($_POST['update_profile'])) {
+    $user_id = $_SESSION['user_id'];
+    $first_name = trim($_POST['first_name']);
+    $last_name = trim($_POST['last_name']);
+    $email = trim($_POST['email']);
+    $contact_number = trim($_POST['contact_number']);
+    $address = trim($_POST['address']);
+    $date_of_birth = trim($_POST['date_of_birth']);
+    
+    // Handle password change if provided
+    $password_update = "";
+    if (!empty($_POST['new_password'])) {
+        $current_password = $_POST['current_password'];
+        $new_password = $_POST['new_password'];
+        $confirm_password = $_POST['confirm_password'];
+        
+        // Verify current password
+        $stmt = $conn->prepare("SELECT password_hash FROM users WHERE user_id=?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+        $stmt->close();
+        
+        if (!password_verify($current_password, $user['password_hash'])) {
+            $profile_update_error = "Current password is incorrect.";
+        } elseif ($new_password !== $confirm_password) {
+            $profile_update_error = "New passwords do not match.";
+        } elseif (strlen($new_password) < 6) {
+            $profile_update_error = "New password must be at least 6 characters long.";
+        } else {
+            $password_hash = password_hash($new_password, PASSWORD_DEFAULT);
+            $password_update = $password_hash;
+        }
+    }
+    
+    // Update user profile
+    if (empty($profile_update_error)) {
+        if (!empty($password_update)) {
+            $stmt = $conn->prepare("UPDATE users SET first_name=?, last_name=?, email=?, contact_number=?, address=?, date_of_birth=?, password_hash=? WHERE user_id=?");
+            $stmt->bind_param("sssssssi", $first_name, $last_name, $email, $contact_number, $address, $date_of_birth, $password_update, $user_id);
+        } else {
+            $stmt = $conn->prepare("UPDATE users SET first_name=?, last_name=?, email=?, contact_number=?, address=?, date_of_birth=? WHERE user_id=?");
+            $stmt->bind_param("ssssssi", $first_name, $last_name, $email, $contact_number, $address, $date_of_birth, $user_id);
+        }
+        
+        if ($stmt->execute()) {
+            // Update session data
+            $_SESSION['first_name'] = $first_name;
+            if (!empty($password_update)) {
+                $profile_update_success = "Profile and password updated successfully!";
+            } else {
+                $profile_update_success = "Profile updated successfully!";
+            }
+        } else {
+            $profile_update_error = "Failed to update profile. Please try again.";
+        }
+        $stmt->close();
+    }
+}
+
+// Fetch user data for profile display
+$user_data = [];
+if (isset($_SESSION['user_id'])) {
+    $stmt = $conn->prepare("SELECT username, first_name, last_name, email, contact_number, address, date_of_birth FROM users WHERE user_id=?");
+    $stmt->bind_param("i", $_SESSION['user_id']);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user_data = $result->fetch_assoc();
+    $stmt->close();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,7 +98,7 @@ session_start();
         <!-- Title -->
         <div class="nav-center">ClassXic</div>
         <!-- User Info -->
-        <div class="user-info">
+        <div class="user-info" onclick="openProfileModal()" style="cursor: pointer;">
             <span><?php echo htmlspecialchars($_SESSION['first_name']); ?></span>
             <img src="Images/user-svgrepo-com.svg" alt="User Icon">
         </div>
@@ -31,17 +107,18 @@ session_start();
     <main class="main">
         <div class="left-section">
             <div class="hero-badge">
-                <span> Welcome to ClassXic</span>
+                <span> Welcome to ClassXic Learning</span>
             </div>
             <h2>
-                Let's <span class="green">Grow</span> Together and <br /> 
-                <span class="highlight">Learn From Each Other</span>
+                <span class="green">Welcome to</span> <span style="color: #333;">ClassXic</span> <span class="green">learning</span><br /> 
+                <span class="highlight"> Management System</span>
             </h2>
             <p>
-                Our innovative learning space empowers students to share ideas,
-                build essential skills, and grow side by side — because learning 
-                is better when we work as a team. Experience education reimagined 
-                for the modern learner.
+                ClassXic is a specialized Learning Management System designed to support 
+                students with dyslexia and other learning differences. Our platform 
+                provides accessible learning materials, assistive technologies, and 
+                dyslexia-friendly features to help every student succeed in their 
+                educational journey.
             </p>
             <div class="cta-buttons">
                 <button class="hire-button primary-btn">
@@ -120,6 +197,120 @@ session_start();
             </div>
         </div>
     </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content profile-modal-content">
+            <span id="close-profile-modal">&times;</span>
+            <h2>My Profile</h2>
+            
+            <?php if ($profile_update_success): ?>
+                <div class="alert alert-success"><?php echo $profile_update_success; ?></div>
+            <?php endif; ?>
+            
+            <?php if ($profile_update_error): ?>
+                <div class="alert alert-danger"><?php echo $profile_update_error; ?></div>
+            <?php endif; ?>
+            
+            <div class="profile-tabs">
+                <button class="tab-button active" onclick="showTab('view')">View Profile</button>
+                <button class="tab-button" onclick="showTab('edit')">Edit Profile</button>
+            </div>
+            
+            <!-- View Profile Tab -->
+            <div id="view-tab" class="tab-content active">
+                <div class="profile-info">
+                    <div class="info-row">
+                        <label>Username:</label>
+                        <span><?php echo htmlspecialchars($user_data['username'] ?? ''); ?></span>
+                    </div>
+                    <div class="info-row">
+                        <label>First Name:</label>
+                        <span><?php echo htmlspecialchars($user_data['first_name'] ?? ''); ?></span>
+                    </div>
+                    <div class="info-row">
+                        <label>Last Name:</label>
+                        <span><?php echo htmlspecialchars($user_data['last_name'] ?? ''); ?></span>
+                    </div>
+                    <div class="info-row">
+                        <label>Email:</label>
+                        <span><?php echo htmlspecialchars($user_data['email'] ?? ''); ?></span>
+                    </div>
+                    <div class="info-row">
+                        <label>Contact Number:</label>
+                        <span><?php echo htmlspecialchars($user_data['contact_number'] ?? ''); ?></span>
+                    </div>
+                    <div class="info-row">
+                        <label>Address:</label>
+                        <span><?php echo htmlspecialchars($user_data['address'] ?? ''); ?></span>
+                    </div>
+                    <div class="info-row">
+                        <label>Date of Birth:</label>
+                        <span><?php echo htmlspecialchars($user_data['date_of_birth'] ?? ''); ?></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Edit Profile Tab -->
+            <div id="edit-tab" class="tab-content">
+                <form method="POST" action="">
+                    <div class="form-group">
+                        <label for="first_name">First Name:</label>
+                        <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($user_data['first_name'] ?? ''); ?>" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="last_name">Last Name:</label>
+                        <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($user_data['last_name'] ?? ''); ?>" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user_data['email'] ?? ''); ?>" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact_number">Contact Number:</label>
+                        <input type="text" id="contact_number" name="contact_number" value="<?php echo htmlspecialchars($user_data['contact_number'] ?? ''); ?>">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">Address:</label>
+                        <textarea id="address" name="address" rows="3"><?php echo htmlspecialchars($user_data['address'] ?? ''); ?></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date_of_birth">Date of Birth:</label>
+                        <input type="date" id="date_of_birth" name="date_of_birth" value="<?php echo htmlspecialchars($user_data['date_of_birth'] ?? ''); ?>">
+                    </div>
+                    
+                    <div class="password-section">
+                        <h4>Change Password (Optional)</h4>
+                        <div class="form-group">
+                            <label for="current_password">Current Password:</label>
+                            <input type="password" id="current_password" name="current_password" placeholder="Enter your current password">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="new_password">New Password:</label>
+                            <input type="password" id="new_password" name="new_password" placeholder="Enter new password (min 6 characters)">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirm_password">Confirm New Password:</label>
+                            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm new password">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" onclick="showTab('view')" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" name="update_profile" class="btn btn-primary">Update Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="about-section" id="about-us">
         <div class="about-text">
             <h1>About Us.</h1>
@@ -180,6 +371,115 @@ session_start();
 
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
   <script src="script/landingpage.js"></script>
+  
+  <script>
+    // Profile Modal Functions
+    function openProfileModal() {
+        document.getElementById('profileModal').style.display = 'flex';
+    }
+    
+    function closeProfileModal() {
+        document.getElementById('profileModal').style.display = 'none';
+    }
+    
+    function showTab(tabName) {
+        // Hide all tab contents
+        const tabContents = document.querySelectorAll('.tab-content');
+        tabContents.forEach(content => {
+            content.classList.remove('active');
+        });
+        
+        // Remove active class from all tab buttons
+        const tabButtons = document.querySelectorAll('.tab-button');
+        tabButtons.forEach(button => {
+            button.classList.remove('active');
+        });
+        
+        // Show selected tab content
+        document.getElementById(tabName + '-tab').classList.add('active');
+        
+        // Add active class to clicked tab button
+        event.target.classList.add('active');
+    }
+    
+    // Close modal when clicking on X
+    document.getElementById('close-profile-modal').onclick = closeProfileModal;
+    
+    // Close modal when clicking outside of it
+    window.onclick = function(event) {
+        const profileModal = document.getElementById('profileModal');
+        if (event.target === profileModal) {
+            closeProfileModal();
+        }
+    }
+    
+    // Show profile modal if there are update messages
+    <?php if ($profile_update_success || $profile_update_error): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            openProfileModal();
+            
+            // Auto-hide success message after 3 seconds
+            const successAlert = document.querySelector('.alert-success');
+            if (successAlert) {
+                setTimeout(function() {
+                    successAlert.style.opacity = '0';
+                    successAlert.style.transform = 'translateY(-10px)';
+                    setTimeout(function() {
+                        successAlert.style.display = 'none';
+                    }, 300);
+                }, 3000);
+            }
+            
+            // Auto-hide error message after 5 seconds
+            const errorAlert = document.querySelector('.alert-danger');
+            if (errorAlert) {
+                setTimeout(function() {
+                    errorAlert.style.opacity = '0';
+                    errorAlert.style.transform = 'translateY(-10px)';
+                    setTimeout(function() {
+                        errorAlert.style.display = 'none';
+                    }, 300);
+                }, 5000);
+            }
+        });
+    <?php endif; ?>
+    
+    // Password validation
+    document.addEventListener('DOMContentLoaded', function() {
+        const newPassword = document.getElementById('new_password');
+        const confirmPassword = document.getElementById('confirm_password');
+        
+        if (confirmPassword) {
+            confirmPassword.addEventListener('input', function() {
+                if (newPassword.value !== confirmPassword.value) {
+                    confirmPassword.setCustomValidity('Passwords do not match');
+                    confirmPassword.style.borderColor = '#f56565';
+                } else {
+                    confirmPassword.setCustomValidity('');
+                    confirmPassword.style.borderColor = '#e2e8f0';
+                }
+            });
+        }
+        
+        if (newPassword) {
+            newPassword.addEventListener('input', function() {
+                if (newPassword.value.length > 0 && newPassword.value.length < 6) {
+                    newPassword.setCustomValidity('Password must be at least 6 characters long');
+                    newPassword.style.borderColor = '#f56565';
+                } else {
+                    newPassword.setCustomValidity('');
+                    newPassword.style.borderColor = '#e2e8f0';
+                }
+                
+                // Re-validate confirm password if it has a value
+                if (confirmPassword && confirmPassword.value) {
+                    confirmPassword.dispatchEvent(new Event('input'));
+                }
+            });
+        }
+    });
+    
+  </script>
  
 </body>
 </html>
