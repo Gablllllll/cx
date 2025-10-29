@@ -1,0 +1,194 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    background-color: #fcfbd7;
+    font-family: 'OpenDyslexic', sans-serif;
+}
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('fonts/OpenDyslexic-Bold.otf') format('opentype'),
+        url('fonts/OpenDyslexic-Regular.otf') format('opentype');
+}
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background-color: #fcfbd7;
+    border-bottom: 1px solid #ccc;
+    z-index: 1000;
+}
+.burger-menu {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+.burger-menu div {
+    width: 25px;
+    height: 3px;
+    background-color: black;
+    margin: 4px 0;
+}
+.nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 30px;
+    font-weight: bold;
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 20px;
+}
+.user-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -500px; /* Set to -400px to completely hide the sidebar */
+    width: 400px;
+    height: 100%;
+    background-color: #fcfbd7;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: left 0.3s ease;
+    z-index: 10000;
+    overflow-y: auto;
+}
+.sidebar.active {
+    left: 0;
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.sidebar ul li {
+    margin: 20px 0;
+}
+.sidebar ul li a {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s;
+    padding: 10px;
+}
+.sidebar ul li a:hover {
+    background-color: #ffcc00; /* Highlight color on hover */
+    color: white;
+    border-radius: 5px;
+}
+.sidebar ul li a img{
+    width: 30px; /* Adjust the size of the icons */
+    height: 30px;
+    padding-right: 20px; /* Space between icon and text */
+}
+.container h1 {
+    display: flex;               /* Use flexbox */
+    flex-direction: column;      /* Stack children vertically */
+    align-items: center;         /* Center items horizontally */
+    justify-content: center;     /* Center items vertically */
+    max-width: 100%;            /* Ensure it doesn't exceed the width */
+    margin-top: 100px;          /* Maintain the top margin */
+}
+.dropdown-menu {
+    display: none; /* Hide the dropdown by default */
+    list-style: none;
+    padding: 0;
+    margin: 0px;
+    width: 300px; /* Set a fixed width */
+    position: absolute; /* Position it below the parent item */
+    background-color: #fcfbd7; /* Match sidebar background */
+    padding: 10px; /* Add some padding */
+    border-radius: 5px; /* Optional: round the corners */
+    left: 50px;
+}
+.dropdown-menu li {
+    margin: 0; /* Remove margin for dropdown items */
+}
+.dropdown-menu li a {
+    padding: 5px 10px; /* Add padding for dropdown links */
+    color: black; /* Text color */
+    text-decoration: none; /* Remove underline */
+}
+.dropdown-menu li {
+    margin: 0; /* Remove margin for dropdown items */
+}
+.dropdown-menu li a {
+    padding: 5px 10px; /* Add padding for dropdown links */
+    color: black; /* Text color */
+    text-decoration: none; /* Remove underline */
+}
+.dropdown-menu.active {
+    display: block; /* Show the dropdown when active */
+    position: absolute; /* Position it below the parent item */
+    background-color: #fcfbd7; /* Match sidebar background */
+    padding: 10px; /* Add some padding */
+    border-radius: 5px; /* Rounded corners */
+    border-left: 2px solid #ffcc00; /* Left border for visual separation */
+}
+.progress-container {
+    max-width: 800px;
+    margin: 20px auto;
+    font-family: 'OpenDyslexic', sans-serif;
+}
+.progress-container h1 {
+    display: flex;               /* Use flexbox */
+    flex-direction: column;      /* Stack children vertically */
+    align-items: center;         /* Center items horizontally */
+    justify-content: center;     /* Center items vertically */
+    max-width: 100%;            /* Ensure it doesn't exceed the width */
+    margin-top: 100px;          /* Maintain the top margin */
+}
+.progress-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.progress-item h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+.progress-item p {
+    margin: 5px 0;
+    color: #555;
+}
+.progress-item .view-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: #3498db;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+.progress-item .view-btn:hover {
+    background-color: #2980b9;
+}
+@media  (max-width: 768px) {
+    .sidebar{
+    width: 250px;
+    }
+    .dropdown-menu {
+        width: 250px; /* Full width on mobile */
+    }
+}

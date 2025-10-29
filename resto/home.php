@@ -1,0 +1,345 @@
+<?php
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Italiano Food</title>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+        integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Style CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Animation Library-->
+    <script src="https://unpkg.com/scrollreveal"></script>
+</head>
+
+<body>
+
+    <header>
+        <div class="banner">
+            <!--Navigation-->
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark d-flex align-items-start my-navbar">
+                <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#menu">Menu</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#hours">Hours</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mx-auto order-0 d-flex flex-column container">
+                    <!--Hamburger Menu-->
+                    <button class="navbar-toggler align-self-start m-3" type="button" data-toggle="collapse"
+                        data-target=".dual-collapse2" aria-controls="navbarNavDropdown" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="icon-bar top-bar"></span>
+                        <span class="icon-bar middle-bar"></span>
+                        <span class="icon-bar bottom-bar"></span>
+                    </button>
+                    <!--Logo-->
+                    <a class="navbar-brand mx-auto" href="#"><img src="img/ilogo1.png" alt="logo"
+                            class="my-nav-logo"></a>
+                </div>
+                <div class="navbar-collapse collapse w-100 order-3 dual-collapse2 " id="navbarNavDropdown">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#gallery">Gallery</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                href="#contact">Contact</a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#contact">Contact</a>
+                                <a class="dropdown-item" href="#about-us">About Us</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!--Button 'Make a order'-->
+            <div class="container text-center">
+                <a href="tel:01226-720755" class="btn btn-warning my-4 my-nav-button p-3">Make a order</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!--Hours Section-->
+        <section class="my-section-jumbotron" id="hours">
+            <div class="jumbotron jumbotron-fluid my-jumbotron d-flex align-items-center">
+                <div class="container text-center my-jumbotron-slogan">
+                    <h2 class="display-4" id="hours">Hours</h2>
+                    <h3 class="h3">Mon - Thu 11AM - 10PM</h3>
+                    <h3 class="h3">Fri 11AM - 11PM</h3>
+                    <h3 class="h3">Sat 12AM - 11PM</h3>
+                    <h3 class="h3">Sun 12AM - 10PM</h3>
+                </div>
+            </div>
+        </section>
+
+        <section class="my-section-mission ">
+            <div class="filter-brown p-md-5">
+                <div class="container wrap py-4">
+                    <div class="menu mx-auto">
+                        <div class="row ">
+                            <div class="col-sm-12 text-center">
+                                <h2 class="display-4 my-menu-text" id="menu">Menu</h2>
+                            </div>
+                        </div>
+                        <!--Menu-->
+                        <div class="row justify-content-sm-center my-menu-row">
+                            <div class="col-sm-12 col-lg-3 my-menu-cell text-center">
+                                <h4>Pizza</h4>
+                            </div>
+                            <div class="col-sm-12 col-lg-3 my-menu-cell">
+                                <h5>Special</h5>
+                                <h6>Cheese Burger</h6>
+                                <p>Cheese, Tomato, Olives, Ketchup</p>
+                                <h6>£6.00</h6>
+                            </div>
+                            <div class="col-sm-12 col-lg-3 my-menu-cell">
+                                <h5>Chicken</h5>
+                                <h6>Chicken Burger</h6>
+                                <p>Cheese, Tomato, Olives, Ketchup</p>
+                                <h6>£6.00</h6>
+                            </div>
+                            <div class="col-sm-12 col-lg-3 my-menu-cell">
+                                <h5>Beef</h5>
+                                <h6>Beef Burger</h6>
+                                <p>Cheese, Tomato, Olives, Ketchup</p>
+                                <h6>£6.00</h6>
+                            </div>
+                        </div>
+                        <div class="row .flex-md-row-reverse  justify-content-sm-center my-menu-row">
+                            <div class="col-sm-12 col-lg-3 my-menu-cell text-center">
+                                <h4>Others</h4>
+                            </div>
+                            <div class="col-sm-12 col-lg-3 my-menu-cell">
+                                <h5>Sandwich</h5>
+                                <h6>Ham</h6>
+                                <p>Cheese, Tomato, Olives, Ketchup</p>
+                                <h6>£6.00</h6>
+                            </div>
+                            <div class="col-sm-12 col-lg-3 my-menu-cell">
+                                <h5>Hot-Dog</h5>
+                                <h6>Sausage</h6>
+                                <p>Cheese, Tomato, Olives, Ketchup</p>
+                                <h6>£6.00</h6>
+                            </div>
+                            <div class="col-sm-12 col-lg-3 my-menu-cell">
+                                <h5>French- Toast</h5>
+                                <h6>Cheese </h6>
+                                <p>Cheese, Tomato, Olives, Ketchup</p>
+                                <h6>£6.00</h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-sm-center my-menu-row">
+                            <div class="col-sm-12 col-lg-3 my-menu-cell text-center">
+                                <h4>Extra</h4>
+                            </div>
+                            <div class="col-sm-12 col-lg-3 my-menu-cell">
+                                <h5>Fries</h5>
+                                <h6>200 grams</h6>
+                                <p>Potato, Salt</p>
+                                <h6>£6.00</h6>
+                            </div>
+                            <div class="col-sm-12 col-lg-3 my-menu-cell">
+                                <h5>Potato</h5>
+                                <h6>350 grams</h6>
+                                <p>Cheese, Potato</p>
+                                <h6>£6.00</h6>
+                            </div>
+                            <div class="col-sm-12 col-lg-3 my-menu-cell">
+                                <h5>Potato-wedges</h5>
+                                <h6>300 grams</h6>
+                                <p>Cheese, Potato, Salt</p>
+                                <h6>£6.00</h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-sm-center my-menu-row">
+                            <div class="col-sm-12 col-lg-3 my-menu-cell text-center">
+                                <h4>Drinks</h4>
+                            </div>
+                            <div class=" col-sm-12 col-lg-3 my-menu-cell">
+                                <h5>Water</h5>
+                                <h6>500ml</h6 <p>Elvian</p>
+                                <h6>£6.00</h6>
+                            </div>
+                            <div class="col-sm-12 col-lg-3 my-menu-cell">
+                                <h5>Orange</h5>
+                                <h6>500ml</h6>
+                                <p>Fresh-juice</p>
+                                <h6>£6.00</h6>
+                            </div>
+                            <div class="col-sm-12 col-lg-3 my-menu-cell">
+                                <h5>Coca-Cola</h5>
+                                <h6>500ml</h6>
+                                <p>Dr.Pepper</p>
+                                <h6>£6.00</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="my-gallery" id="gallery">
+            <div class="slider">
+                <!--Slider-->
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                        <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+                    </ol>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img class="d-block w-100" src="img/img1.jpg" alt="First slide">
+                        </div>
+                        <div class="carousel-item">
+                            <img class="d-block w-100" src="img/img2.jpg" alt="Second slide">
+                        </div>
+                        <div class="carousel-item">
+                            <img class="d-block w-100" src="img/img3.jpg" alt="Third slide">
+                        </div>
+                        <div class="carousel-item">
+                            <img class="d-block w-100" src="img/img4.jpg" alt="Fourth slide">
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="my-about-us " id="about-us">
+            <div class="filter-yellow">
+                <div class="container-fluid">
+                    <div class="row d-flex justify-content-center">
+                        <h2 class="display-4 my-about-us-text m-4">About us</h2>
+                    </div>
+                    <div class="row d-flex justify-content-center p-4">
+                        <!--Image with our Chef-->
+                        <img src="img/aboutus.png" alt="chef"
+                            class="img-fluid my-about-us-image col-sm-12 col-lg-4 flex-fill mx-3">
+                        <!--History of our restaurant-->
+                        <div class="my-background col-sm-12 col-lg-6 mx-3 p-3 text-center d-flex align-items-center">
+                            <p class="">The term pizza was first recorded in the 10th century in a Latin manuscript from
+                                the Southern Italian town of Gaeta in Lazio, on the border with Campania. Modern pizza
+                                was invented in Naples, and the dish and its variants have since become popular in many
+                                countries. It has become one of the most popular foods in the world and a common fast
+                                food item in Europe and North America, available at pizzerias (restaurants specializing
+                                in pizza), restaurants offering Mediterranean cuisine, and via pizza delivery. Many
+                                companies sell ready-baked frozen pizzas to be reheated in an ordinary home oven.
+
+                                The Associazione Verace Pizza Napoletana (lit. True Neapolitan Pizza Association) is a
+                                non-profit organization founded in 1984 with headquarters in Naples that aims to promote
+                                traditional Neapolitan pizza. In 2009, upon Italy's request, Neapolitan pizza was
+                                registered with the European Union as a Traditional Speciality Guaranteed dish, and in
+                                2017 the art of its making was included on UNESCO's list of intangible cultural
+                                heritage.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="my-contact">
+            <div class="filter-orange">
+                <div class="container">
+                    <div class="row d-flex justify-content-center ">
+                        <h2 class="display-4 my-contact-text my-3" id="contact">Contact</h2>
+                    </div>
+                    <!--Location, Phone, Email-->
+                    <div class="row d-flex justify-content-center ">
+                        <div class="col-sm-12 col-md-4 my-contact-cell text-center">
+                            <h4>Location</h4>
+                            <a href="https://goo.gl/maps/stdMqeAX1afnsW5G9" class="my-contact-icon"><i
+                                    class="fas fa-map-marker-alt"></i></a>
+                            <p>19 May Day Green, Barnsley S70 1RH</p>
+                        </div>
+                        <div class="col-sm-12 col-md-4 my-contact-cell text-center">
+                            <h4>Phone</h4>
+                            <a href="tel:01226-720755" class="my-contact-icon"><i class="fas fa-phone"></i></a>
+                            <p>01226 720755</p>
+                        </div>
+                        <div class="col-sm-12 col-md-4 my-contact-cell text-center">
+                            <h4>Email</h4>
+                            <a href="mailto:pastasalat@YAMMY.COM" class="my-contact-icon"><i
+                                    class="fas fa-envelope"></i></a>
+                            <p>PASTASALAT@YAMMY.COM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="my-footer">
+        <div class="filter-red">
+            <div class="container">
+                <div class="row pt-4">
+                    <div class="col-sm-12 col-lg-8 d-flex flex-column">
+                        <!--Social Media-->
+                        <div class="row my-footer-border p-2">
+                            <h5 class="col-sm-12 col-md-3 d-flex justify-content-center align-items-center mx-3">Find us
+                                online
+                            </h5>
+                            <a href="https://www.facebook.com/"
+                                class="col-sm-12 col-md-2 d-flex justify-content-center"><i
+                                    class="fab fa-facebook d-flex justify-content-center align-items-center"></i></a>
+                            <a href="https://www.twitter.com/"
+                                class="col-sm-12 col-md-2 d-flex justify-content-center"><i
+                                    class="fab fa-twitter d-flex justify-content-center align-items-center"></i></a>
+                            <a href="https://www.instagram.com/"
+                                class="col-sm-12 col-md-2 d-flex justify-content-center"><i
+                                    class="fab fa-instagram d-flex justify-content-center align-items-center"></i></a>
+                        </div>
+                        <div class="row">
+                            <p class="col-sm-12">© 2020 Piotr Pacewicz. All Rights Reserved
+                            </p>
+                            <p class="col-sm-12">Designed & Developed by Piotr Pacewicz</p>
+                        </div>
+                    </div>
+                    <!--Logo-Bottom-->
+                    <div class="col-sm-12 col-lg-4 d-flex flex-column justify-content-center align-items-center">
+                        <a href="#" class="d-flex justify-content-center align-items-center footer__a"><img
+                                src="img/ilogo.png" alt="second logo in footer" class="img-fluid my-footer-img"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- jQuery,popper.js, boostrap -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
+    <!--animation-->
+    <script src="app.js"></script>
+</body>
+
+</html>

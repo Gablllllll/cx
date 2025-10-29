@@ -1,0 +1,295 @@
+@import url("https://fonts.googleapis.com/css?family=Bungee+Inline&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Love+Ya+Like+A+Sister&display=swap");
+
+:root {
+    --light: rgb(246, 241, 199);
+    --dark: rgb(61, 35, 20);
+    --orange: #f39744;
+    --red: #cb2636;
+    --green: #0f934a;
+    --green: rgb(15, 147, 74);
+    --lightred: #b23125;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--dark);
+    font-family: "Love Ya Like A Sister", cursive;
+}
+
+/* Navigation */
+
+.banner {
+    background-image: url(../img/main.jpg);
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.bg-dark {
+    background: transparent !important;
+}
+
+.navbar-nav li {
+    margin: 1rem;
+    font-family: "Bungee Inline", cursive;
+}
+
+.navbar-nav>li>.dropdown-menu {
+    background-color: transparent;
+    border: none;
+}
+
+.navbar-nav>li>.dropdown-menu a:hover {
+    background-color: black;
+}
+
+/* Dropdown menu font color*/
+
+.navbar-nav>li>.dropdown-menu a {
+    color: var(--dark);
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: var(--dark);
+    font-size: 2rem;
+}
+
+.my-navbar .navbar-nav li a {
+    color: var(--dark);
+}
+
+.my-nav-button {
+    background-color: var(--green);
+    color: var(--light);
+    border: 1px solid var(--green);
+    font-family: "Bungee Inline", cursive;
+}
+
+/*Hamburger menu animation*/
+
+.icon-bar {
+    width: 22px;
+    height: 2px;
+    background-color: var(--dark);
+    display: block;
+    transition: all 0.2s;
+    margin-top: 4px;
+}
+
+.navbar-toggler {
+    border: none;
+    background: transparent !important;
+}
+
+.navbar-toggler .top-bar {
+    transform: rotate(45deg);
+    transform-origin: 10% 10%;
+}
+
+.navbar-toggler .middle-bar {
+    opacity: 0;
+}
+
+.navbar-toggler .bottom-bar {
+    transform: rotate(-45deg);
+    transform-origin: 10% 90%;
+}
+
+.navbar-toggler.collapsed .top-bar {
+    transform: rotate(0);
+}
+
+.navbar-toggler.collapsed .middle-bar {
+    opacity: 1;
+}
+
+.navbar-toggler.collapsed .bottom-bar {
+    transform: rotate(0);
+}
+
+@media (min-width: 700px) and (max-width: 950px) {
+    .navbar-dark .navbar-nav .nav-link {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 950px) {
+    .my-nav-logo {
+        max-width: 150px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .navbar-nav li {
+        margin: 0;
+    }
+}
+
+.my-nav-logo {
+    max-width: 200px;
+}
+
+/* Jumbotron*/
+
+.my-jumbotron {
+    background-image: url(../img/img5.jpg);
+    max-width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 70vh;
+    overflow-x: hidden;
+}
+
+.display-4,
+.h3 {
+    color: var(--light);
+    font-family: "Bungee Inline", cursive;
+}
+
+.jumbotron {
+    margin-bottom: 0;
+}
+
+/* Menu */
+.my-section-mission {
+    background-image: url(../img/background-1.png);
+    width: 100%;
+    min-height: 60vh;
+}
+
+.filter-brown {
+    background-color: rgba(15, 147, 74, .6);
+    width: 100%;
+    min-height: 60vh;
+}
+
+.wrap {
+    width: 80%;
+    background-color: var(--light);
+}
+
+.menu {
+    width: 70%;
+}
+
+.my-menu-text {
+    color: #3d2314;
+}
+
+.my-menu-row {
+    border-top: 2px solid #3d2314;
+}
+
+.my-menu-cell {
+    max-width: 300px;
+    border-right: 2px solid #3d2314;
+    margin: 5px 0;
+}
+
+@media (max-width: 992px) {
+    .my-menu-row {
+        border-top: none;
+    }
+
+    .my-menu-cell {
+        border-right: none;
+        margin: 0;
+    }
+}
+
+/*Gallery*/
+
+
+/*about us*/
+
+.my-about-us {
+    background-image: url(../img/background.png);
+    width: 100%;
+    min-height: 60vh;
+}
+
+.filter-yellow {
+    background-color: rgba(246, 241, 199, 0.85);
+    width: 100%;
+    min-height: 60vh;
+}
+
+.my-about-us-text {
+    color: var(--dark);
+}
+
+.my-background {
+    background-color: var(--light);
+}
+
+/*Contact */
+
+.my-contact {
+    color: var(--light);
+    background-image: url(../img/background.png);
+    width: 100%;
+    min-height: 35vh;
+}
+
+.filter-orange {
+    background-color: rgba(243, 151, 68, 0.85);
+    width: 100%;
+    min-height: 35vh;
+}
+
+.my-contact-icon {
+    font-size: 3rem;
+    color: var(--light);
+}
+
+.my-contact-icon:hover {
+    color: var(--red);
+}
+
+/* Footer */
+
+.my-footer {
+    color: var(--light);
+    background-image: url(../img/background.png);
+    width: 100%;
+    min-height: 35vh;
+}
+
+.filter-red {
+    background-color: rgba(203, 38, 54, 0.92);
+    background-position: center;
+    width: 100%;
+    min-height: 35vh;
+}
+
+i.fab {
+    color: white;
+    width: 100px;
+    height: 100px;
+    font-size: 5rem;
+}
+
+i.fab:hover {
+    color: var(--orange);
+}
+
+.my-footer-border {
+    border-bottom: 2px solid var(--light);
+}
+
+.footer__a {
+    margin-bottom: 15px;
+}
+
+.my-footer-img {
+    width: 80%;
+    height: 80%;
+
+}
