@@ -84,6 +84,88 @@ body {
 .user-info img:hover {
   transform: scale(1.1);
 }
+
+.user-info {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    0 8px 16px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.8);
+  min-width: 200px;
+  z-index: 1000;
+  display: none;
+  overflow: hidden;
+  animation: dropdownSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 0.5rem;
+}
+
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.user-dropdown.active {
+  display: block;
+}
+
+.user-dropdown a {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  color: #1e293b;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: 'OpenDyslexic', Arial, sans-serif;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.user-dropdown a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(47, 133, 90, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.user-dropdown a:hover::before {
+  left: 100%;
+}
+
+
+.user-dropdown a:last-child {
+  border-bottom: none;
+}
+
+
+
 .sidebar {
   position: fixed;
   top: 0;
@@ -481,6 +563,7 @@ body.sidebar-hidden .main {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  text-decoration: none;
 }
 
 .secondary-btn {
@@ -1122,6 +1205,29 @@ body.sidebar-hidden .site-footer {
     left: 2rem;
   }
   
+  /* Hide user's name beside avatar on small screens */
+  .user-info span {
+    display: none;
+  }
+  
+  /* When sidebar is closed on mobile, do not offset content */
+  body.sidebar-hidden .main,
+  body.sidebar-hidden .features-section,
+  body.sidebar-hidden .about-section,
+  .features-section,
+  .about-section {
+    transform: none;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  /* Keep about section aligned on small screens, even when sidebar is hidden */
+  body.sidebar-hidden .about-section,
+  .about-section {
+    margin-left: 9px;
+    margin-right: 9px;
+  }
+  
   .features-container {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -1161,6 +1267,109 @@ body.sidebar-hidden .site-footer {
   .curve-text {
     font-size: 1.5rem;
   }
+}
+
+/* Extra small phones */
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.75rem 1rem;
+  }
+
+  .left-section {
+    padding: 1.25rem 1rem;
+    margin-top: 80px;
+  }
+
+  .left-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .left-section p {
+    font-size: 0.95rem;
+  }
+
+  .cta-buttons {
+    gap: 0.75rem;
+  }
+
+  .hire-button, .secondary-btn {
+    padding: 0.9rem 1.25rem;
+    font-size: 1rem;
+  }
+
+  .students-image {
+    margin-top: 1.25rem;
+    max-width: 100%;
+  }
+
+  /* Hide floating decorative cards on very small screens */
+  .floating-card {
+    display: none;
+  }
+
+  .curve-text {
+    font-size: 1.4rem;
+  }
+
+  .features-section {
+    margin: 3rem auto 0;
+    padding: 0 1rem;
+  }
+
+  .features-section h1 {
+    font-size: 1.75rem;
+    margin-top: 60px;
+  }
+
+  .features-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .about-section {
+    padding: 2rem 1.25rem;
+    gap: 1.25rem;
+    max-width: 95%;
+  }
+
+  .about-text h1 {
+    font-size: 1.75rem;
+  }
+
+  .about-text p {
+    font-size: 0.95rem;
+  }
+
+  .site-footer {
+    padding: 1.25rem 1.5rem;
+    gap: 0.75rem;
+  }
+
+  /* Features modal (landing page) image scaling on small screens */
+  #modal-img {
+    width: 100%;
+    height: auto;
+    max-height: 40vh;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+  .modal-content {
+    padding: 1.25rem;
+    max-width: 92vw;
+  }
+
+  /* Make sidebar dropdown shorter and align with calendar */
+  .dropdown-menu { 
+    width: calc(120px - 2rem); /* widened by 10px */
+    left: 0; /* Align left edge with calendar */
+    padding: 12px; 
+    border-radius: 12px; 
+    max-height: 200px; 
+    overflow-y: auto; 
+    border-width: 6px; 
+  }
+  .dropdown-menu li a { padding: 10px 12px; font-size: 0.95rem; gap: 10px; }
+  .dropdown-menu li a img { width: 10px; height: 18px; }
 }
 
 /* Floating Option Menu */
@@ -1562,4 +1771,24 @@ body.sidebar-hidden .site-footer {
   .btn {
     width: 100%;
   }
+}
+@media (max-width: 768px) {
+  .navbar { padding: 1rem; }
+  .user-info span { display: none; }
+  .sidebar { width: 300px; }
+  .main-content { margin-left: 0; padding: 1rem; }
+  .content-wrapper { max-width: 100%; }
+  .page-header { padding: 1.25rem; margin-bottom: 2rem; }
+  .page-header h1 { font-size: calc(var(--font-size, 16px) * 1.3); }
+  .module-list { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+}
+
+/* Phones */
+@media (max-width: 480px) {
+  
+
+  /* Make sidebar dropdown a bit shorter to avoid overlap */
+  .dropdown-menu { width: 230px; padding: 12px; border-radius: 12px; max-height: none; overflow: visible; border-width: 6px; margin-left: 3px; }
+  .dropdown-menu li a { padding: 10px 12px; font-size: 0.95rem; gap: 10px; }
+  .dropdown-menu li a img { width: 10px; height: 18px; }
 }

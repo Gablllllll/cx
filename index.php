@@ -89,9 +89,9 @@ if (isset($_POST['login'])) {
         <div></div>
         <div></div>
         </div>
-        <!-- Title -->
+
         <div class="nav-center">ClassXic</div>
-        <!-- User Info -->
+
         <div class="user-info">
         <img src="Images/user-svgrepo-com.svg" alt="User Icon">
         </div>
@@ -115,14 +115,14 @@ if (isset($_POST['login'])) {
                 dyslexia-friendly features to help every student succeed in their 
                 educational journey.
             </p>
-            <div class="cta-buttons">
-                <button class="hire-button primary-btn">
+			<div class="cta-buttons">
+				<button class="hire-button primary-btn" data-bs-toggle="modal" data-bs-target="#loginModal">
                     <span>Get Started</span>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
-                <button class="secondary-btn">
+				<button class="secondary-btn" id="learnMoreBtn">
                     <span>Learn More</span>
                 </button>
             </div>
@@ -160,10 +160,10 @@ if (isset($_POST['login'])) {
                 <div class="sliding-container">
                     <div class="sliding-content">
                         <div class="slide active">
-                            <p>Dyslexia is a learning difference that affects reading, writing, and language processing. It’s not linked to intelligence but to how the brain interprets words and sounds. Raising awareness helps people understand that dyslexia can be managed with the right support.</p>
+                            <p>Students with dyslexia often face difficulties in traditional classrooms. With awareness, teachers can use tools like dyslexia-friendly fonts, assistive technology, and multisensory teaching to help them learn better.</p>
                         </div>
                         <div class="slide">
-                            <p>Students with dyslexia often face difficulties in traditional classrooms. With awareness, teachers can use tools like dyslexia-friendly fonts, assistive technology, and multisensory teaching to help them learn better.</p>
+                            <p>Dyslexia is a learning difference that affects reading, writing, and language processing. It’s not linked to intelligence but to how the brain interprets words and sounds. Raising awareness helps people understand that dyslexia can be managed with the right support.</p>
                         </div>
                         <div class="slide">
                             <p>Awareness is also about recognizing the strengths of people with dyslexia. Many are creative thinkers and problem solvers who excel in art, innovation, and design.</p>
@@ -189,7 +189,7 @@ if (isset($_POST['login'])) {
     <div class="sidebar active" id="sidebar">
         <ul>
 
-            <li><a href="#main-page"><img src="Images/home-svgrepo-com.svg" alt="Home Icon"> Home</a></li>
+            <li><a href="#"><img src="Images/home-svgrepo-com.svg" alt="Home Icon"> Home</a></li>
             <li><a href="#features-section"><img src="Images/idea-svgrepo-com.svg" alt="Features Icon">Features</a></li>
             <li><a href="#about-us"><img src="Images/about-filled-svgrepo-com.svg" alt="About-Us Icon">About Us</a></li>
             <br>
@@ -357,9 +357,9 @@ if (isset($_POST['login'])) {
                     <p class="text-center mb-2">
                         <a href="#" class="forgot-password-link">Forgot Password?</a>
                     </p>
-                    <p class="text-center mb-0">
-                        Don't have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#roleModal" data-bs-dismiss="modal">Sign up here</a>
-                    </p>
+					<p class="text-center mb-0">
+						Don't have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#signupModal" data-bs-dismiss="modal">Sign up here</a>
+					</p>
                 </div>
             </div>
         </div>
@@ -444,5 +444,14 @@ if (isset($_POST['login'])) {
         <?php endif; ?>
 
     <script src="script/loginpage.js"></script>
+	<script>
+		document.getElementById('learnMoreBtn')?.addEventListener('click', function (e) {
+			e.preventDefault();
+			const featuresSection = document.getElementById('features-section');
+			if (featuresSection) {
+				featuresSection.scrollIntoView({ behavior: 'smooth' });
+			}
+		});
+	</script>
 </body>
 </html>

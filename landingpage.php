@@ -98,9 +98,12 @@ if (isset($_SESSION['user_id'])) {
         <!-- Title -->
         <div class="nav-center">ClassXic</div>
         <!-- User Info -->
-        <div class="user-info" onclick="openProfileModal()" style="cursor: pointer;">
+        <div class="user-info" onclick="toggleUserDropdown()" style="cursor: pointer;">
             <span><?php echo htmlspecialchars($_SESSION['first_name']); ?></span>
             <img src="Images/user-svgrepo-com.svg" alt="User Icon">
+            <div class="user-dropdown" id="userDropdown">
+                <a href="#" onclick="openProfileModal()">Profile Information</a>
+            </div>
         </div>
     </nav>
 
@@ -121,13 +124,13 @@ if (isset($_SESSION['user_id'])) {
                 educational journey.
             </p>
             <div class="cta-buttons">
-                <button class="hire-button primary-btn">
+                <a class="hire-button primary-btn" href="studentmodule.php">
                     <span>Get Started</span>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                </button>
-                <button class="secondary-btn">
+                </a>
+                <button class="secondary-btn" id="learnMoreBtn">
                     <span>Learn More</span>
                 </button>
             </div>
@@ -250,61 +253,53 @@ if (isset($_SESSION['user_id'])) {
                     </div>
                 </div>
             </div>
-            
+
             <!-- Edit Profile Tab -->
             <div id="edit-tab" class="tab-content">
                 <form method="POST" action="">
                     <div class="form-group">
-                        <label for="first_name">First Name:</label>
+                        <label for="first_name">First Name</label>
                         <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($user_data['first_name'] ?? ''); ?>" required>
                     </div>
-                    
                     <div class="form-group">
-                        <label for="last_name">Last Name:</label>
+                        <label for="last_name">Last Name</label>
                         <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($user_data['last_name'] ?? ''); ?>" required>
                     </div>
-                    
                     <div class="form-group">
-                        <label for="email">Email:</label>
+                        <label for="email">Email</label>
                         <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user_data['email'] ?? ''); ?>" required>
                     </div>
-                    
                     <div class="form-group">
-                        <label for="contact_number">Contact Number:</label>
+                        <label for="contact_number">Contact Number</label>
                         <input type="text" id="contact_number" name="contact_number" value="<?php echo htmlspecialchars($user_data['contact_number'] ?? ''); ?>">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="address">Address:</label>
-                        <textarea id="address" name="address" rows="3"><?php echo htmlspecialchars($user_data['address'] ?? ''); ?></textarea>
+                        <label for="address">Address</label>
+                        <input type="text" id="address" name="address" value="<?php echo htmlspecialchars($user_data['address'] ?? ''); ?>">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="date_of_birth">Date of Birth:</label>
+                        <label for="date_of_birth">Date of Birth</label>
                         <input type="date" id="date_of_birth" name="date_of_birth" value="<?php echo htmlspecialchars($user_data['date_of_birth'] ?? ''); ?>">
                     </div>
-                    
+
                     <div class="password-section">
-                        <h4>Change Password (Optional)</h4>
+                        <h4>Change Password (optional)</h4>
                         <div class="form-group">
-                            <label for="current_password">Current Password:</label>
-                            <input type="password" id="current_password" name="current_password" placeholder="Enter your current password">
+                            <label for="current_password">Current Password</label>
+                            <input type="password" id="current_password" name="current_password" placeholder="Enter current password">
                         </div>
-                        
                         <div class="form-group">
-                            <label for="new_password">New Password:</label>
-                            <input type="password" id="new_password" name="new_password" placeholder="Enter new password (min 6 characters)">
+                            <label for="new_password">New Password</label>
+                            <input type="password" id="new_password" name="new_password" placeholder="At least 6 characters">
                         </div>
-                        
                         <div class="form-group">
-                            <label for="confirm_password">Confirm New Password:</label>
-                            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm new password">
+                            <label for="confirm_password">Confirm New Password</label>
+                            <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-type new password">
                         </div>
                     </div>
-                    
+
                     <div class="form-actions">
-                        <button type="button" onclick="showTab('view')" class="btn btn-secondary">Cancel</button>
-                        <button type="submit" name="update_profile" class="btn btn-primary">Update Profile</button>
+                        <button type="submit" name="update_profile" class="btn btn-primary">Save Changes</button>
                     </div>
                 </form>
             </div>
@@ -348,7 +343,7 @@ if (isset($_SESSION['user_id'])) {
                         <ul class="dropdown-menu">
                             <li><a href="#features-section"><img src="Images/idea-svgrepo-com.svg" alt="Features Icon">Features</a></li>
                             <li><a href="#about-us"><img src="Images/about-filled-svgrepo-com.svg" alt="About-Us Icon">About Us</a></li>
-                            <li><a href="#settings"><img src="Images/settings-2-svgrepo-com.svg" alt="Settings Icon"> Settings</a></li>
+                       
                             <li><a href="logout.php"><img src="Images/logout-svgrepo-com.svg" alt="Logout Icon">Log out</a></li>
                         </ul>
                     </li>
@@ -478,6 +473,7 @@ if (isset($_SESSION['user_id'])) {
             });
         }
     });
+    
     
   </script>
  

@@ -35,8 +35,9 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     <div class="sidebar-content">
       <ul class="sidebar-nav">
         <li><a href="admin.php"><img src="Images/dashboard-svgrepo-com.svg" alt="Home Icon">Dashboard</a></li>
-        <li><a href="admin_users.php"><img src="Images/user-svgrepo-com.svg" alt="Features Icon">Users</a></li>
-        <li><a href="admin_modules.php"><img src="Images/book-svgrepo-com.svg" alt="About-Us Icon">Modules</a></li>
+        <li><a href="admin_users.php"><img src="Images/user-svgrepo-com.svg" alt="Users Icon">Users</a></li>
+        <li><a href="admin_modules.php"><img src="Images/book-svgrepo-com.svg" alt="Modules Icon">Modules</a></li>
+        <li><a href="admin_feedback.php"><img src="Images/about-filled-svgrepo-com.svg" alt="Feedback Icon">Feedback</a></li>
       </ul>
       <div class="sidebar-bottom">
         <ul class="sidebar-options">

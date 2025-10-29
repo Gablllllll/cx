@@ -161,6 +161,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Hide sidebar by default on small screens (<=768px)
+    try {
+        if (window.innerWidth <= 768) {
+            closeSidebar();
+        }
+        // Also re-apply on resize when moving to smaller screens
+        window.addEventListener('resize', function() {
+            if (window.innerWidth <= 768) {
+                closeSidebar();
+            }
+        });
+    } catch (e) {
+        console.warn('Sidebar auto-hide setup failed:', e);
+    }
+
     // Dropdown functionality
     document.querySelectorAll('.dropdown-toggle').forEach(item => {
         item.addEventListener('click', function(event) {

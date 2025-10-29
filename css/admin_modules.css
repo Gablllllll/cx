@@ -181,91 +181,91 @@ body { font-family: var(--font-body); }
       max-width: 100%;            /* Ensure it doesn't exceed the width */
       margin-top: 100px;          /* Maintain the top margin */
   }
-  .dropdown-menu {
-   
-      display: none;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      width: 300px;
-      position: absolute;
-      background-color: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px);
-      padding: 15px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      bottom: 100%;
-      left: 0;
-      margin-bottom: 10px;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(20px);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .dropdown-menu.active {
-      display: block;
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-  }
-  
-  .dropdown-menu li {
-      margin: 0;
-      padding: 0;
-  }
-  
-  .dropdown-menu li a {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      color: #2d3748;
-      text-decoration: none;
-      border-radius: 12px;
-      transition: all 0.3s ease;
-      font-weight: 500;
-  }
-  
-  .dropdown-menu li a:hover {
-  
-      color: white;
-      transform: translateX(5px);
-  }
-  
-  .dropdown-menu li a img {
-      width: 20px;
-      height: 20px;
-      transition: filter 0.3s ease;
-  }
-  
-  .dropdown-menu li a:hover img {
-      filter: brightness(0) invert(1);
-  }
-  
-  /* Neutralize hover/focus visuals inside dropdown only */
-  .dropdown-menu li a {
-      background: transparent;
-      text-decoration: none;
-      -webkit-tap-highlight-color: transparent;
-  }
-  
-  .dropdown-menu li a::before {
-      content: none;
-  }
-  
-  .dropdown-menu li a:hover {
-      background: transparent;
-      box-shadow: none;
-      color: #2d3748; /* keep text color stable */
-      transform: translateX(0); /* prevent slide effect if undesired */
-  }
-  
-  .dropdown-menu li a:focus {
-      outline: none;
-      box-shadow: none;
-  }
+
+.dropdown-menu {
+    display: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 270px;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 15px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    bottom: 100%;
+    left: 0;
+    margin-bottom: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropdown-menu.active {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu li {
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-menu li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    color: #2d3748;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.dropdown-menu li a:hover {
+
+    color: white;
+    transform: translateX(5px);
+}
+
+.dropdown-menu li a img {
+    width: 20px;
+    height: 20px;
+    transition: filter 0.3s ease;
+}
+
+.dropdown-menu li a:hover img {
+    filter: brightness(0) invert(1);
+}
+
+/* Neutralize hover/focus visuals inside dropdown only */
+.dropdown-menu li a {
+    background: transparent;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.dropdown-menu li a::before {
+    content: none;
+}
+
+.dropdown-menu li a:hover {
+    background: transparent;
+    box-shadow: none;
+    color: #2d3748; /* keep text color stable */
+    transform: translateX(0); /* prevent slide effect if undesired */
+}
+
+.dropdown-menu li a:focus {
+    outline: none;
+    box-shadow: none;
+}
   
   /* Main content shift to make room for sidebar on this page */
   .main-content {
