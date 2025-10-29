@@ -12,17 +12,59 @@ function toggleSidebar() {
     }
 }
 
+// User dropdown functionality
+function toggleUserDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('active');
+}
+
+// Profile modal functionality
+function openProfileModal() {
+    document.getElementById('profileModal').style.display = 'flex';
+}
+
+function closeProfileModal() {
+    document.getElementById('profileModal').style.display = 'none';
+}
+
+function showTab(tabName) {
+    // Hide all tab contents
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // Remove active class from all tab buttons
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    // Show selected tab content
+    document.getElementById(tabName + '-tab').classList.add('active');
+    
+    // Add active class to clicked tab button
+    event.target.classList.add('active');
+}
+
 // Wait for DOM to be ready before adding event listeners
 document.addEventListener('DOMContentLoaded', function() {
     // Sidebar click outside to close
     document.addEventListener('click', function (event) {
         const sidebar = document.getElementById('sidebar');
         const burgerMenu = document.querySelector('.burger-menu');
+            const userInfo = document.querySelector('.user-info');
+        const dropdown = document.getElementById('userDropdown');
 
         // Close sidebar if clicked outside
         if (sidebar && burgerMenu && !sidebar.contains(event.target) && !burgerMenu.contains(event.target)) {
             sidebar.classList.add('hidden');
             document.body.classList.add('sidebar-hidden');
+        }
+
+        // Close user dropdown if clicked outside
+        if (userInfo && dropdown && !userInfo.contains(event.target)) {
+            dropdown.classList.remove('active');
         }
     });
 
@@ -175,4 +217,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize calendar
     updateCalendar();
+    
+    // Profile modal event listeners
+    const closeProfileModalBtn = document.getElementById('close-profile-modal');
+    if (closeProfileModalBtn) {
+        closeProfileModalBtn.addEventListener('click', closeProfileModal);
+    }
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        const profileModal = document.getElementById('profileModal');
+        if (event.target === profileModal) {
+            closeProfileModal();
+        }
+    });
+
+    // Hide sidebar by default on small screens (<=768px)
+    try {
+        const sidebar = document.getElementById('sidebar');
+        if (window.innerWidth <= 768 && sidebar) {
+            sidebar.classList.add('hidden');
+            document.body.classList.add('sidebar-hidden');
+        }
+        window.addEventListener('resize', function() {
+            if (window.innerWidth <= 768 && sidebar) {
+                sidebar.classList.add('hidden');
+                document.body.classList.add('sidebar-hidden');
+            }
+        });
+    } catch (e) {
+        console.warn('Sidebar auto-hide setup failed:', e);
+    }
+});
+
+document.getElementById('learnMoreBtn')?.addEventListener('click', function (e) {
+    e.preventDefault();
+    const aboutSection = document.getElementById('about-us');
+    if (aboutSection) {
+        aboutSection.scrollIntoView({ behavior: 'smooth' });
+    }
 });

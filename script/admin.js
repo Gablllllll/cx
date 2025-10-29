@@ -49,3 +49,61 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 });
+
+// Feedback Modal Functions
+function openFeedbackModal(feedback) {
+    const modal = document.getElementById('feedbackModal');
+    
+    // Populate modal with feedback data
+    document.getElementById('modalUserName').textContent = feedback.first_name && feedback.last_name 
+        ? `${feedback.first_name} ${feedback.last_name}` 
+        : feedback.username;
+    
+    document.getElementById('modalMaterialName').textContent = feedback.material_title;
+    
+    // Create rating stars
+    const ratingContainer = document.getElementById('modalRating');
+    ratingContainer.innerHTML = '';
+    for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('span');
+        star.className = `star ${i <= feedback.rating ? 'filled' : ''}`;
+        star.textContent = '★';
+        ratingContainer.appendChild(star);
+    }
+    
+    document.getElementById('modalComment').textContent = feedback.comment || 'No comment provided';
+    
+    // Format date
+    const date = new Date(feedback.created_at);
+    document.getElementById('modalDate').textContent = 
+        `Submitted on ${date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        })}`;
+    
+    // Show modal
+    modal.classList.add('active');
+}
+
+function closeFeedbackModal() {
+    const modal = document.getElementById('feedbackModal');
+    modal.classList.remove('active');
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('feedbackModal');
+    if (event.target === modal) {
+        closeFeedbackModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeFeedbackModal();
+    }
+});

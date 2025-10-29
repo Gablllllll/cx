@@ -13,17 +13,131 @@ function toggleSidebar() {
     }
 }
 
+// User dropdown functionality
+function toggleUserDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('active');
+}
+
+// Show settings modal
+function showSettings() {
+    const modal = document.getElementById('settingsModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.add('active');
+    }
+    const dropdown = document.getElementById('userDropdown');
+    if (dropdown) dropdown.classList.remove('active');
+}
+
+// Close settings modal
+function closeSettingsModal() {
+    const modal = document.getElementById('settingsModal');
+    if (modal) {
+        modal.style.display = 'none';
+        modal.classList.remove('active');
+    }
+}
+
+// Font size change functionality
+function changeFontSize(size) {
+    // Target the actual PDF content elements
+    const pdfContentElements = [
+        '#content', // Main PDF content div
+        '.pdf-content', // PDF content class
+        '.pdf-content-container', // PDF container
+        '.pdf-title', // PDF titles
+        '.pdf-subtitle', // PDF subtitles  
+        '.pdf-paragraph', // PDF paragraphs
+        '.word', // Individual words
+        '.word-popup', // Word popup
+        '.popup-content' // Popup content
+    ];
+    
+    // Remove existing font classes and apply new ones
+    pdfContentElements.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(element => {
+            element.classList.remove('font-small', 'font-medium', 'font-large', 'font-extra-large');
+            element.classList.add('font-' + size);
+        });
+    });
+    
+    // Store in localStorage
+    localStorage.setItem('fontSize', size);
+}
+
+// Line spacing change functionality
+function changeLineSpacing(spacing) {
+    // Target the actual PDF content elements
+    const pdfContentElements = [
+        '#content', // Main PDF content div
+        '.pdf-content', // PDF content class
+        '.pdf-content-container', // PDF container
+        '.pdf-title', // PDF titles
+        '.pdf-subtitle', // PDF subtitles  
+        '.pdf-paragraph', // PDF paragraphs
+        '.word', // Individual words
+        '.word-popup', // Word popup
+        '.popup-content' // Popup content
+    ];
+    
+    // Remove existing line spacing classes and apply new ones
+    pdfContentElements.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(element => {
+            element.classList.remove('line-tight', 'line-normal', 'line-relaxed', 'line-loose');
+            element.classList.add('line-' + spacing);
+        });
+    });
+    
+    // Store in localStorage
+    localStorage.setItem('lineSpacing', spacing);
+}
+
+// Save settings
+function saveSettings() {
+    alert('Settings saved successfully!');
+    closeSettingsModal();
+}
+
 // Wait for DOM to be ready before adding event listeners
 document.addEventListener('DOMContentLoaded', function() {
+    // Hide sidebar by default on small screens
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar && window.innerWidth <= 768) {
+        sidebar.classList.add('hidden');
+        document.body.classList.add('sidebar-hidden');
+    }
+
+    // Keep behavior responsive on resize
+    window.addEventListener('resize', function() {
+        if (!sidebar) return;
+        if (window.innerWidth <= 768) {
+            sidebar.classList.add('hidden');
+            document.body.classList.add('sidebar-hidden');
+        } else {
+            sidebar.classList.remove('hidden');
+            document.body.classList.remove('sidebar-hidden');
+        }
+    });
+
     // Sidebar click outside to close
     document.addEventListener('click', function (event) {
         const sidebar = document.getElementById('sidebar');
         const burgerMenu = document.querySelector('.burger-menu');
+        const userInfo = document.querySelector('.user-info');
+        const dropdown = document.getElementById('userDropdown');
 
         // Close sidebar if clicked outside
         if (sidebar && burgerMenu && !sidebar.contains(event.target) && !burgerMenu.contains(event.target)) {
             sidebar.classList.add('hidden');
             document.body.classList.add('sidebar-hidden');
+        }
+
+        // Close user dropdown if clicked outside
+        if (userInfo && dropdown && !userInfo.contains(event.target)) {
+            dropdown.classList.remove('active');
         }
     });
     document.querySelectorAll('.dropdown-toggle').forEach(item => {
@@ -173,4 +287,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize calendar
     updateCalendar();
+
+    // Load saved settings
+    const savedFontSize = localStorage.getItem('fontSize') || 'medium';
+    document.getElementById('fontSize').value = savedFontSize;
+    changeFontSize(savedFontSize);
+
+    const savedLineSpacing = localStorage.getItem('lineSpacing') || 'normal';
+    document.getElementById('lineSpacing').value = savedLineSpacing;
+    changeLineSpacing(savedLineSpacing);
 });

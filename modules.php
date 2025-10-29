@@ -81,9 +81,12 @@ $total_feedback = $avg_data['total_feedback'];
         <!-- Title -->
         <div class="nav-center">ClassXic</div>
         <!-- User Info -->
-        <div class="user-info">
+        <div class="user-info" onclick="toggleUserDropdown()" style="cursor: pointer;">
             <span><?php echo htmlspecialchars($_SESSION['first_name']); ?></span>
             <img src="Images/user-svgrepo-com.svg" alt="User Icon">
+            <div class="user-dropdown" id="userDropdown">
+                <a href="#" onclick="showSettings()">Settings</a>
+            </div>
         </div>
     </nav>
 
@@ -112,8 +115,7 @@ $total_feedback = $avg_data['total_feedback'];
                     <li>
                         <a href="#" class="dropdown-toggle"><img src="Images/option.png" alt="Option Icon">Option</a>
                         <ul class="dropdown-menu">
-                          
-                            <li><a href="settings.php"><img src="Images/settings-2-svgrepo-com.svg" alt="Settings Icon"> Settings</a></li>
+                            <li><a href="#" onclick="showSettings()"><img src="Images/settings-2-svgrepo-com.svg" alt="Settings Icon"> Settings</a></li>
                             <li><a href="logout.php"><img src="Images/logout-svgrepo-com.svg" alt="Logout Icon">Log out</a></li>
                         </ul>
                     </li>
@@ -254,6 +256,32 @@ $total_feedback = $avg_data['total_feedback'];
         </div>
     </main>
 
+    <!-- Settings Modal (copied from studentmodule.php) -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content settings-modal-content">
+            <span id="close-settings-modal">&times;</span>
+            <h2>Settings</h2>
+            <div class="settings-section">
+                <h3>Font Settings</h3>
+                <div class="setting-group">
+                    <label for="fontSize">Font Size:</label>
+                    <input type="range" id="fontSize" min="12" max="24" value="16" onchange="updateFontSize(this.value)">
+                    <span id="fontSizeValue">16px</span>
+                </div>
+                <div class="setting-group">
+                    <label for="lineHeight">Line Height:</label>
+                    <input type="range" id="lineHeight" min="1.2" max="2.0" step="0.1" value="1.6" onchange="updateLineHeight(this.value)">
+                    <span id="lineHeightValue">1.6</span>
+                </div>
+            </div>
+            
+            <div class="settings-actions">
+                <button class="btn btn-secondary" onclick="resetSettings()">Reset to Default</button>
+                <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.min.js"></script>
     <script src="script/modules.js"></script>
     <script>
@@ -357,6 +385,9 @@ $total_feedback = $avg_data['total_feedback'];
             let isPaused = false;
             let currentWordIdx = 0;
             let startWordIdx = 0;
+            let pausedAtWordIdx = 0;
+            let currentPageNumber = 1;
+            let totalPages = 0;
 
 			// Simple heuristic syllabifier for English words
 			function syllabifyWord(word) {
@@ -435,29 +466,34 @@ $total_feedback = $avg_data['total_feedback'];
 					and: 'Coordinating conjunction connecting words, phrases, or clauses of equal rank.',
 					the: 'Definite article used before a noun to specify a particular one.',
 					for: 'Preposition meaning intended for, in support of, or because of.',
+					are: 'Present tense plural form of the verb "to be"; used with you, we, they, or plural nouns.',
+					is: 'Present tense singular form of the verb "to be"; used with he, she, it, or singular nouns.',
+					am: 'Present tense first-person singular form of the verb "to be"; used with "I".',
+					was: 'Past tense form of "to be"; used with I, he, she, it, or singular nouns.',
+					were: 'Past tense form of "to be"; used with you, we, they, or plural nouns.',
 					i: 'First-person singular pronoun used by the speaker.',
-					me: 'First-person singular objective pronoun (object form of “I”).',
+					me: 'First-person singular objective pronoun (object form of "I").',
 					we: 'First-person plural pronoun used by the speaker and others.',
 					you: 'Second-person pronoun referring to the listener or reader.',
-					him: 'Objective case of “he”.',
-					her: 'Objective case of “she”; also possessive adjective/pronoun.',
-					his: 'Possessive adjective or pronoun related to “he”.',
-					hers: 'Possessive pronoun related to “she”.',
-					our: 'Possessive adjective related to “we”.',
-					ours: 'Possessive pronoun related to “we”.',
-					your: 'Possessive adjective related to “you”.',
-					yours: 'Possessive pronoun related to “you”.',
-					their: 'Possessive adjective related to “they”.',
-					theirs: 'Possessive pronoun related to “they”.',
-					them: 'Objective case of “they”.',
-					myself: 'Reflexive form of “I”.',
-					yourself: 'Reflexive form of “you”.',
-					himself: 'Reflexive form of “he”.',
-					herself: 'Reflexive form of “she”.',
-					itself: 'Reflexive form of “it”.',
-					ourselves: 'Reflexive form of “we”.',
-					yourselves: 'Reflexive form of “you”.',
-					themselves: 'Reflexive form of “they”.'
+					him: 'Objective case of "he".',
+					her: 'Objective case of "she"; also possessive adjective/pronoun.',
+					his: 'Possessive adjective or pronoun related to "he".',
+					hers: 'Possessive pronoun related to "she".',
+					our: 'Possessive adjective related to "we".',
+					ours: 'Possessive pronoun related to "we".',
+					your: 'Possessive adjective related to "you".',
+					yours: 'Possessive pronoun related to "you".',
+					their: 'Possessive adjective related to "they".',
+					theirs: 'Possessive pronoun related to "they".',
+					them: 'Objective case of "they".',
+					myself: 'Reflexive form of "I".',
+					yourself: 'Reflexive form of "you".',
+					himself: 'Reflexive form of "he".',
+					herself: 'Reflexive form of "she".',
+					itself: 'Reflexive form of "it".',
+					ourselves: 'Reflexive form of "we".',
+					yourselves: 'Reflexive form of "you".',
+					themselves: 'Reflexive form of "they".'
 				};
 				// Try lemmatized/clean variants against local overrides first
 				const localVariants = generateDictionaryVariants(lower);
@@ -539,28 +575,123 @@ $total_feedback = $avg_data['total_feedback'];
                     charCount += span.textContent.length + 1;
                 });
             }
+            
+            // Detect current visible page based on scroll position
+            function getCurrentPage() {
+                const pageBreaks = Array.from(document.querySelectorAll('.page-break'));
+                const scrollPosition = window.scrollY + 100; // offset for navbar
+                
+                if (pageBreaks.length === 0) return 1;
+                
+                for (let i = pageBreaks.length - 1; i >= 0; i--) {
+                    if (pageBreaks[i].offsetTop <= scrollPosition) {
+                        return parseInt(pageBreaks[i].getAttribute('data-page-marker'));
+                    }
+                }
+                return 1;
+            }
+            
+            // Get word spans for a specific page
+            function getPageWordSpans(pageNum) {
+                return wordSpans.filter(span => {
+                    const spanPage = parseInt(span.getAttribute('data-page-num'));
+                    return spanPage === pageNum;
+                });
+            }
 
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.worker.min.js';
             
             async function extractTextItemsFromPdf(fileUrl) {
                 const pdfDoc = await pdfjsLib.getDocument(fileUrl).promise;
                 let items = [];
+                
                 for (let i = 1; i <= pdfDoc.numPages; i++) {
                     const page = await pdfDoc.getPage(i);
+                    const viewport = page.getViewport({ scale: 1.5 });
+                    
+                    // Get operators to find images
+                    const ops = await page.getOperatorList();
                     const textContent = await page.getTextContent();
+                    
+                    // Create a map of Y positions for text and images
+                    let contentMap = [];
+                    
+                    // Extract actual images from the page
+                    const images = [];
+                    for (let j = 0; j < ops.fnArray.length; j++) {
+                        if (ops.fnArray[j] === pdfjsLib.OPS.paintImageXObject || 
+                            ops.fnArray[j] === pdfjsLib.OPS.paintJpegXObject) {
+                            const imageName = ops.argsArray[j][0];
+                            try {
+                                const image = await page.objs.get(imageName);
+                                if (image) {
+                                    // Create canvas for this specific image
+                                    const canvas = document.createElement('canvas');
+                                    const ctx = canvas.getContext('2d');
+                                    
+                                    canvas.width = image.width;
+                                    canvas.height = image.height;
+                                    
+                                    // Check if image has RGBA data already
+                                    if (image.data) {
+                                        const imgData = ctx.createImageData(image.width, image.height);
+                                        const data = image.data;
+                                        
+                                        // Handle different color formats
+                                        if (image.kind === 1) { // Grayscale
+                                            for (let k = 0; k < data.length; k++) {
+                                                const idx = k * 4;
+                                                imgData.data[idx] = data[k];     // R
+                                                imgData.data[idx + 1] = data[k]; // G
+                                                imgData.data[idx + 2] = data[k]; // B
+                                                imgData.data[idx + 3] = 255;     // A
+                                            }
+                                        } else if (data.length === image.width * image.height * 4) {
+                                            // Already RGBA
+                                            imgData.data.set(data);
+                                        } else {
+                                            // RGB - convert to RGBA
+                                            for (let k = 0; k < data.length; k += 3) {
+                                                const idx = (k / 3) * 4;
+                                                imgData.data[idx] = data[k];         // R
+                                                imgData.data[idx + 1] = data[k + 1]; // G
+                                                imgData.data[idx + 2] = data[k + 2]; // B
+                                                imgData.data[idx + 3] = 255;         // A
+                                            }
+                                        }
+                                        
+                                        ctx.putImageData(imgData, 0, 0);
+                                        images.push(canvas);
+                                    } else if (image.bitmap) {
+                                        // Use bitmap if available
+                                        ctx.drawImage(image.bitmap, 0, 0);
+                                        images.push(canvas);
+                                    }
+                                }
+                            } catch (e) {
+                                console.warn('Could not extract image:', imageName, e);
+                            }
+                        }
+                    }
+                    
+                    // Extract text with positions
                     let lastY = null;
                     let lastX = null;
                     let line = '';
                     let lineFontSizes = [];
+                    let lineYPos = 0;
+                    
                     textContent.items.forEach(item => {
                         const thisY = item.transform[5];
                         const thisX = item.transform[4];
 
                         if (lastY !== null && Math.abs(thisY - lastY) > 5) {
                             if (line.trim().length > 0) {
-                                items.push({
+                                contentMap.push({
+                                    type: 'text',
                                     text: line.trim(),
-                                    fontSize: Math.round(Math.max(...lineFontSizes))
+                                    fontSize: Math.round(Math.max(...lineFontSizes)),
+                                    yPos: viewport.height - lineYPos
                                 });
                             }
                             line = '';
@@ -574,17 +705,65 @@ $total_feedback = $avg_data['total_feedback'];
                         line += item.str;
                         lineFontSizes.push(item.transform[0]);
                         lastY = thisY;
+                        lineYPos = thisY;
                         lastX = thisX + item.width;
                     });
 
                     if (line.trim().length > 0) {
-                        items.push({
+                        contentMap.push({
+                            type: 'text',
                             text: line.trim(),
-                            fontSize: Math.round(Math.max(...lineFontSizes))
+                            fontSize: Math.round(Math.max(...lineFontSizes)),
+                            yPos: viewport.height - lineYPos
                         });
                     }
-
-                    items.push({text: '', fontSize: 0});
+                    
+                    // Add images to contentMap with proper Y positions
+                    // Get image positions from the operator list
+                    let imagePositions = [];
+                    for (let j = 0; j < ops.fnArray.length; j++) {
+                        if (ops.fnArray[j] === pdfjsLib.OPS.paintImageXObject || 
+                            ops.fnArray[j] === pdfjsLib.OPS.paintJpegXObject) {
+                            // Look for transform matrix before the paint operation
+                            let transformIdx = j - 1;
+                            while (transformIdx >= 0 && ops.fnArray[transformIdx] !== pdfjsLib.OPS.transform) {
+                                transformIdx--;
+                            }
+                            if (transformIdx >= 0 && ops.argsArray[transformIdx]) {
+                                const transform = ops.argsArray[transformIdx];
+                                // Y position is in transform[5]
+                                const yPos = viewport.height - (transform[5] || 0);
+                                imagePositions.push(yPos);
+                            }
+                        }
+                    }
+                    
+                    // Add images with their positions
+                    images.forEach((canvas, idx) => {
+                        contentMap.push({
+                            type: 'image',
+                            canvas: canvas,
+                            yPos: imagePositions[idx] || (idx * 200),
+                            pageNum: i
+                        });
+                    });
+                    
+                    // Sort all content by Y position to get proper order
+                    contentMap.sort((a, b) => a.yPos - b.yPos);
+                    
+                    // Add page number to all items
+                    contentMap.forEach(item => {
+                        item.pageNum = i;
+                    });
+                    
+                    items.push(...contentMap);
+                    
+                    // Add page break BEFORE next page (except before the first page)
+                    if (i < pdfDoc.numPages) {
+                        items.push({type: 'pagebreak', pageNum: i + 1});
+                    }
+                    
+                    items.push({type: 'text', text: '', fontSize: 0, yPos: 9999, pageNum: i});
                 }
                 return items;
             }
@@ -593,7 +772,44 @@ $total_feedback = $avg_data['total_feedback'];
                 const fragment = document.createDocumentFragment();
                 let wordIndex = 0;
                 items.forEach(item => {
-                    if (!item.text.trim()) return;
+                    // Handle page break
+                    if (item.type === 'pagebreak') {
+                        const pageBreak = document.createElement('div');
+                        pageBreak.className = 'page-break';
+                        pageBreak.setAttribute('data-page-marker', item.pageNum);
+                        pageBreak.style.cssText = `
+                            margin: 40px 0 30px 0;
+                            padding: 15px 0;
+                            border-top: 2px solid #e0e0e0;
+                            text-align: center;
+                            color: #999;
+                            font-size: 13px;
+                            font-weight: 500;
+                        `;
+                        pageBreak.textContent = `Page ${item.pageNum}`;
+                        fragment.appendChild(pageBreak);
+                        return;
+                    }
+                    
+                    // Handle image items
+                    if (item.type === 'image') {
+                        const imgDiv = document.createElement('div');
+                        imgDiv.className = 'pdf-image-container';
+                        imgDiv.style.cssText = 'margin: 15px 0; text-align: center;';
+                        
+                        const img = document.createElement('img');
+                        img.src = item.canvas.toDataURL();
+                         // Image sizes
+                        img.style.cssText = 'max-width: 300px; width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);';
+                        img.alt = `Image from page ${item.pageNum}`;
+                        
+                        imgDiv.appendChild(img);
+                        fragment.appendChild(imgDiv);
+                        return;
+                    }
+                    
+                    // Handle text items
+                    if (!item.text || !item.text.trim()) return;
                     let className = '';
                     if (item.fontSize >= 20) {
                         className = 'pdf-title';
@@ -622,6 +838,7 @@ $total_feedback = $avg_data['total_feedback'];
                             span.textContent = part;
                             span.tabIndex = 0;
                             span.setAttribute('data-word-index', wordIndex++);
+                            span.setAttribute('data-page-num', item.pageNum || 1);
                             div.appendChild(span);
                         } else {
                             // punctuation or other symbols
@@ -668,7 +885,11 @@ $total_feedback = $avg_data['total_feedback'];
                 highlightNarrateBtn.disabled = true;
                 try {
                     const items = await extractTextItemsFromPdf(fileUrl);
-                    pdfText = items.map(item => item.text).join('\n');
+                    // Build pdfText from text items only (not images)
+                    pdfText = items
+                        .filter(item => item.type === 'text' && item.text)
+                        .map(item => item.text)
+                        .join('\n');
                     contentDiv.innerHTML = '';
                     const fragment = renderTextItemsToHtml(items);
                     contentDiv.appendChild(fragment);
@@ -702,17 +923,43 @@ $total_feedback = $avg_data['total_feedback'];
 			playPauseBtn.addEventListener('click', () => {
 				if (!utterance) {
 					wordSpans = Array.from(document.querySelectorAll('.word'));
-					// Build text from the DOM (from current starting word) to preserve punctuation and natural pauses
+					
+					// Get current page
+					currentPageNumber = getCurrentPage();
+					
+					// Get words only from current page
+					const pageWords = getPageWordSpans(currentPageNumber);
+					
+					if (pageWords.length === 0) {
+						alert('No text found on current page');
+						return;
+					}
+					
+					// Determine starting word index - use paused position if resuming on same page
+					let resumeFromIdx = 0;
+					if (isPaused && pausedAtWordIdx >= 0) {
+						const pausedWord = wordSpans[pausedAtWordIdx];
+						if (pausedWord && parseInt(pausedWord.getAttribute('data-page-num')) === currentPageNumber) {
+							resumeFromIdx = pageWords.indexOf(pausedWord);
+							if (resumeFromIdx === -1) resumeFromIdx = 0;
+						}
+					}
+					
+					// Build text from current page only
 					let speakText = '';
 					let range;
-					if (wordSpans[startWordIdx]) {
+					if (pageWords[resumeFromIdx]) {
 						range = document.createRange();
-						range.setStartBefore(wordSpans[startWordIdx]);
-						range.setEndAfter(contentDiv.lastChild);
+						range.setStartBefore(pageWords[resumeFromIdx]);
+						range.setEndAfter(pageWords[pageWords.length - 1]);
 						speakText = range.toString();
-					} else {
-						speakText = contentDiv.innerText || contentDiv.textContent || '';
 					}
+					
+					if (!speakText) {
+						alert('No text to read on current page');
+						return;
+					}
+					
 					utterance = new SpeechSynthesisUtterance(speakText);
                     utterance.lang = 'en-US';
                     utterance.rate = parseFloat(speedControl.value) * 0.65;
@@ -721,12 +968,12 @@ $total_feedback = $avg_data['total_feedback'];
                     const selectedVoice = selectedVoiceIndex !== '' ? voices[selectedVoiceIndex] || voices[0] : voices[0];
                     utterance.voice = selectedVoice;
 
-					// Build boundaries of each subsequent word span within the speakText, so we can map charIndex → word
+					// Build boundaries of each word span in current page within the speakText
 					let activeWordSpans = [];
 					let activeBoundaries = [];
 					if (range) {
-						for (let i = startWordIdx; i < wordSpans.length; i++) {
-							const wordNode = wordSpans[i];
+						for (let i = resumeFromIdx; i < pageWords.length; i++) {
+							const wordNode = pageWords[i];
 							const wordRange = document.createRange();
 							wordRange.selectNodeContents(wordNode);
 							const preRange = document.createRange();
@@ -752,24 +999,31 @@ $total_feedback = $avg_data['total_feedback'];
 						if (wordIndex === -1) return;
 						document.querySelectorAll('.word').forEach(span => span.classList.remove('tts-highlight'));
 						const currentWordSpan = activeWordSpans[wordIndex];
-						if (currentWordSpan) currentWordSpan.classList.add('tts-highlight');
+						if (currentWordSpan) {
+							currentWordSpan.classList.add('tts-highlight');
+							// Track current word position in global wordSpans array
+							currentWordIdx = wordSpans.indexOf(currentWordSpan);
+						}
 					};
                     utterance.onend = () => {
                         playPauseBtn.textContent = '▶️ Play';
                         utterance = null;
                         clearTTSHighlight();
                         startWordIdx = 0;
+                        pausedAtWordIdx = 0;
+                        isPaused = false;
                     };
                     window.speechSynthesis.speak(utterance);
                     playPauseBtn.textContent = '⏸️ Pause';
-                } else if (isPaused) {
-                    window.speechSynthesis.resume();
-                    playPauseBtn.textContent = '⏸️ Pause';
                     isPaused = false;
                 } else {
-                    window.speechSynthesis.pause();
+                    // Pause: cancel current utterance and store position
+                    window.speechSynthesis.cancel();
                     playPauseBtn.textContent = '▶️ Play';
                     isPaused = true;
+                    // Store the current word position when pausing
+                    pausedAtWordIdx = currentWordIdx;
+                    utterance = null;
                 }
             });
 
@@ -780,6 +1034,8 @@ $total_feedback = $avg_data['total_feedback'];
                     playPauseBtn.textContent = '▶️ Play';
                     clearTTSHighlight();
                     startWordIdx = 0;
+                    pausedAtWordIdx = 0;
+                    isPaused = false;
                 }
             });
 
@@ -835,13 +1091,18 @@ $total_feedback = $avg_data['total_feedback'];
                     popupMeaning.textContent = 'No information found.';
                 }
 
+                // If TTS is currently playing, pause it and save position
                 if (utterance) {
                     window.speechSynthesis.cancel();
                     utterance = null;
+                    // Save current position if we were playing
+                    if (!isPaused) {
+                        pausedAtWordIdx = currentWordIdx;
+                        isPaused = true;
+                    }
+                    playPauseBtn.textContent = '▶️ Play';
+                    clearTTSHighlight();
                 }
-                startWordIdx = parseInt(target.getAttribute('data-word-index'));
-                playPauseBtn.textContent = '▶️ Play';
-                clearTTSHighlight();
             });
 
             // Removed outside-click close to allow interacting with popup without it closing
@@ -991,5 +1252,79 @@ $total_feedback = $avg_data['total_feedback'];
             };
 
         </script>
+
+    <script>
+        // Settings Modal Functions (copied from studentmodule.php)
+        function showSettings() {
+            var m = document.getElementById('settingsModal');
+            if (m) m.style.display = 'flex';
+        }
+
+        function updateFontSize(value) {
+            document.documentElement.style.setProperty('--font-size', value + 'px');
+            var el = document.getElementById('fontSizeValue');
+            if (el) el.textContent = value + 'px';
+        }
+
+        function updateLineHeight(value) {
+            document.documentElement.style.setProperty('--line-height', value);
+            var el = document.getElementById('lineHeightValue');
+            if (el) el.textContent = value;
+        }
+
+        function resetSettings() {
+            document.documentElement.style.setProperty('--font-size', '16px');
+            document.documentElement.style.setProperty('--line-height', '1.6');
+            var fs = document.getElementById('fontSize');
+            var lh = document.getElementById('lineHeight');
+            if (fs) fs.value = 16;
+            if (lh) lh.value = 1.6;
+            var fsv = document.getElementById('fontSizeValue');
+            var lhv = document.getElementById('lineHeightValue');
+            if (fsv) fsv.textContent = '16px';
+            if (lhv) lhv.textContent = '1.6';
+        }
+
+        function saveSettings() {
+            var fontSize = document.getElementById('fontSize')?.value;
+            var lineHeight = document.getElementById('lineHeight')?.value;
+            if (fontSize != null) localStorage.setItem('fontSize', fontSize);
+            if (lineHeight != null) localStorage.setItem('lineHeight', lineHeight);
+            alert('Settings saved successfully!');
+            var m = document.getElementById('settingsModal');
+            if (m) m.style.display = 'none';
+        }
+
+        // Close settings modal
+        (function(){
+            var closeBtn = document.getElementById('close-settings-modal');
+            if (closeBtn) {
+                closeBtn.onclick = function() {
+                    var m = document.getElementById('settingsModal');
+                    if (m) m.style.display = 'none';
+                };
+            }
+            // Load saved settings on page load
+            window.addEventListener('load', function() {
+                var savedFontSize = localStorage.getItem('fontSize');
+                var savedLineHeight = localStorage.getItem('lineHeight');
+                if (savedFontSize) {
+                    document.documentElement.style.setProperty('--font-size', savedFontSize + 'px');
+                    var fs = document.getElementById('fontSize');
+                    var fsv = document.getElementById('fontSizeValue');
+                    if (fs) fs.value = savedFontSize;
+                    if (fsv) fsv.textContent = savedFontSize + 'px';
+                }
+                if (savedLineHeight) {
+                    document.documentElement.style.setProperty('--line-height', savedLineHeight);
+                    var lh = document.getElementById('lineHeight');
+                    var lhv = document.getElementById('lineHeightValue');
+                    if (lh) lh.value = savedLineHeight;
+                    if (lhv) lhv.textContent = savedLineHeight;
+                }
+            });
+        })();
+    </script>
+
 </body>
 </html>

@@ -1,8 +1,67 @@
 
+// Student Module JavaScript
+
+// User dropdown functionality
+function toggleUserDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('active');
+}
+
+// Profile modal functionality
+function openProfileModal() {
+    document.getElementById('profileModal').style.display = 'flex';
+}
+
+function closeProfileModal() {
+    document.getElementById('profileModal').style.display = 'none';
+}
+
+function showTab(tabName, button) {
+    // Hide all tab contents
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // Remove active class from all tab buttons
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    // Show selected tab content
+    document.getElementById(tabName + '-tab').classList.add('active');
+    
+    // Add active class to clicked tab button
+    if (button) {
+        button.classList.add('active');
+    }
+}
+
 // Additional student module specific functionality can be added here if needed
 document.addEventListener('DOMContentLoaded', function() {
 	// Any student module specific JavaScript can go here
 	console.log('Student module page loaded');
+	
+	// Debug: Check if elements exist
+	const userInfo = document.querySelector('.user-info');
+	const dropdown = document.getElementById('userDropdown');
+	const modal = document.getElementById('profileModal');
+	
+	console.log('User info element:', userInfo);
+	console.log('User dropdown element:', dropdown);
+	console.log('Profile modal element:', modal);
+	
+	// Add click event listener to user info if it exists
+	if (userInfo) {
+		console.log('User info click listener added');
+	} else {
+		console.error('User info element not found!');
+	}
+
+    // Sidebar and dropdown click outside functionality is handled by landingpage.js
+
+    // Dropdown functionality is handled by landingpage.js
 
     // Calendar functionality
     let currentDate = new Date();
