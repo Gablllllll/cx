@@ -7,6 +7,62 @@ if (!isset($_GET['file_url'])) {
 }
 
 $file_url = urldecode($_GET['file_url']);
+<<<<<<< HEAD
+=======
+
+// Get material information
+$material_query = "SELECT material_id, title FROM learning_materials WHERE file_url = ?";
+$material_stmt = $conn->prepare($material_query);
+$material_stmt->bind_param("s", $file_url);
+$material_stmt->execute();
+$material_result = $material_stmt->get_result();
+$material_data = $material_result->fetch_assoc();
+$material_stmt->close();
+
+if (!$material_data) {
+    die("Module not found.");
+}
+
+$material_id = $material_data['material_id'];
+$material_title = $material_data['title'];
+
+// Get user's existing feedback
+$user_feedback = null;
+if (isset($_SESSION['user_id'])) {
+    $feedback_query = "SELECT rating, comment FROM feedback WHERE user_id = ? AND material_id = ?";
+    $feedback_stmt = $conn->prepare($feedback_query);
+    $feedback_stmt->bind_param("ii", $_SESSION['user_id'], $material_id);
+    $feedback_stmt->execute();
+    $feedback_result = $feedback_stmt->get_result();
+    $user_feedback = $feedback_result->fetch_assoc();
+    $feedback_stmt->close();
+}
+
+// Get all feedback for this material
+$all_feedback_query = "SELECT u.first_name, f.rating, f.comment, f.created_at 
+                      FROM feedback f 
+                      JOIN users u ON f.user_id = u.user_id 
+                      WHERE f.material_id = ? 
+                      ORDER BY f.created_at DESC";
+$all_feedback_stmt = $conn->prepare($all_feedback_query);
+$all_feedback_stmt->bind_param("i", $material_id);
+$all_feedback_stmt->execute();
+$all_feedback_result = $all_feedback_stmt->get_result();
+$all_feedback = $all_feedback_result->fetch_all(MYSQLI_ASSOC);
+$all_feedback_stmt->close();
+
+// Calculate average rating
+$avg_rating_query = "SELECT AVG(rating) as avg_rating, COUNT(*) as total_feedback FROM feedback WHERE material_id = ?";
+$avg_stmt = $conn->prepare($avg_rating_query);
+$avg_stmt->bind_param("i", $material_id);
+$avg_stmt->execute();
+$avg_result = $avg_stmt->get_result();
+$avg_data = $avg_result->fetch_assoc();
+$avg_stmt->close();
+
+$average_rating = $avg_data['avg_rating'] ? round($avg_data['avg_rating'], 1) : 0;
+$total_feedback = $avg_data['total_feedback'];
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,9 +84,18 @@ $file_url = urldecode($_GET['file_url']);
         <!-- Title -->
         <div class="nav-center">ClassXic</div>
         <!-- User Info -->
+<<<<<<< HEAD
         <div class="user-info">
             <span><?php echo htmlspecialchars($_SESSION['first_name']); ?></span>
             <img src="Images/user-svgrepo-com.svg" alt="User Icon">
+=======
+        <div class="user-info" onclick="toggleUserDropdown()" style="cursor: pointer;">
+            <span><?php echo htmlspecialchars($_SESSION['first_name']); ?></span>
+            <img src="Images/user-svgrepo-com.svg" alt="User Icon">
+            <div class="user-dropdown" id="userDropdown">
+                <a href="#" onclick="showSettings()">Settings</a>
+            </div>
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
         </div>
     </nav>
 
@@ -59,8 +124,12 @@ $file_url = urldecode($_GET['file_url']);
                     <li>
                         <a href="#" class="dropdown-toggle"><img src="Images/option.png" alt="Option Icon">Option</a>
                         <ul class="dropdown-menu">
+<<<<<<< HEAD
                           
                             <li><a href="settings.php"><img src="Images/settings-2-svgrepo-com.svg" alt="Settings Icon"> Settings</a></li>
+=======
+                            <li><a href="#" onclick="showSettings()"><img src="Images/settings-2-svgrepo-com.svg" alt="Settings Icon"> Settings</a></li>
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                             <li><a href="logout.php"><img src="Images/logout-svgrepo-com.svg" alt="Logout Icon">Log out</a></li>
                         </ul>
                     </li>
@@ -126,11 +195,193 @@ $file_url = urldecode($_GET['file_url']);
                 </button>
             </div>
         </div>
+<<<<<<< HEAD
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.min.js"></script>
     <script src="script/modules.js"></script>
     <script>
+=======
+
+        <!-- Feedback Section -->
+        <div class="feedback-section">
+            <div class="feedback-header">
+                <h2>Module Feedback</h2>
+                <div class="rating-summary">
+                    <div class="average-rating">
+                        <span class="rating-stars">
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <span class="star <?php echo $i <= $average_rating ? 'filled' : ''; ?>">★</span>
+                            <?php endfor; ?>
+                        </span>
+                        <span class="rating-value"><?php echo $average_rating; ?>/5</span>
+                        <span class="rating-count">(<?php echo $total_feedback; ?> feedback)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feedback Form -->
+            <div class="feedback-form-container">
+                <h3>Share Your Feedback</h3>
+                <form id="feedbackForm" class="feedback-form">
+                    <input type="hidden" id="material_id" value="<?php echo $material_id; ?>">
+                    
+                    <div class="form-group">
+                        <label>Rate this module:</label>
+                        <div class="star-rating">
+                            <?php for ($i = 5; $i >= 1; $i--): ?>
+                                <input type="radio" id="star<?php echo $i; ?>" name="rating" value="<?php echo $i; ?>" 
+                                       <?php echo ($user_feedback && $user_feedback['rating'] == $i) ? 'checked' : ''; ?>>
+                                <label for="star<?php echo $i; ?>" class="star-label">★</label>
+                            <?php endfor; ?>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="comment">Comment (optional):</label>
+                        <textarea id="comment" name="comment" rows="4" placeholder="Share your thoughts about this module..."><?php echo htmlspecialchars($user_feedback['comment'] ?? ''); ?></textarea>
+                    </div>
+                    
+                    <button type="submit" class="feedback-submit-btn">
+                        <?php echo $user_feedback ? 'Update Feedback' : 'Submit Feedback'; ?>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Existing Feedback Display -->
+            <?php if (!empty($all_feedback)): ?>
+            <div class="feedback-list">
+                <h3>Student Feedback</h3>
+                <div class="feedback-items">
+                    <?php foreach ($all_feedback as $feedback): ?>
+                    <div class="feedback-item">
+                        <div class="feedback-user">
+                            <span class="user-name"><?php echo htmlspecialchars($feedback['first_name']); ?></span>
+                            <div class="feedback-rating">
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <span class="star <?php echo $i <= $feedback['rating'] ? 'filled' : ''; ?>">★</span>
+                                <?php endfor; ?>
+                            </div>
+                            <span class="feedback-date"><?php echo date("M j, Y", strtotime($feedback['created_at'])); ?></span>
+                        </div>
+                        <?php if (!empty($feedback['comment'])): ?>
+                        <div class="feedback-comment">
+                            <?php echo htmlspecialchars($feedback['comment']); ?>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+    </main>
+
+    <!-- Settings Modal (copied from studentmodule.php) -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content settings-modal-content">
+            <span id="close-settings-modal">&times;</span>
+            <h2>Settings</h2>
+            <div class="settings-section">
+                <h3>Font Settings</h3>
+                <div class="setting-group">
+                    <label for="fontSize">Font Size:</label>
+                    <input type="range" id="fontSize" min="12" max="24" value="16" onchange="updateFontSize(this.value)">
+                    <span id="fontSizeValue">16px</span>
+                </div>
+                <div class="setting-group">
+                    <label for="lineHeight">Line Height:</label>
+                    <input type="range" id="lineHeight" min="1.2" max="2.0" step="0.1" value="1.6" onchange="updateLineHeight(this.value)">
+                    <span id="lineHeightValue">1.6</span>
+                </div>
+            </div>
+            
+            <div class="settings-actions">
+                <button class="btn btn-secondary" onclick="resetSettings()">Reset to Default</button>
+                <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.min.js"></script>
+    <script src="script/modules.js"></script>
+    <script>
+        // Feedback functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const feedbackForm = document.getElementById('feedbackForm');
+            
+            if (feedbackForm) {
+                feedbackForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(feedbackForm);
+                    const materialId = document.getElementById('material_id').value;
+                    
+                    // Add material_id to form data
+                    formData.append('material_id', materialId);
+                    
+                    // Show loading state
+                    const submitBtn = feedbackForm.querySelector('.feedback-submit-btn');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.textContent = 'Submitting...';
+                    submitBtn.disabled = true;
+                    
+                    fetch('feedback_handler.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Show success message
+                            showFeedbackMessage(data.message, 'success');
+                            // Reload page to show updated feedback
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1500);
+                        } else {
+                            showFeedbackMessage(data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showFeedbackMessage('An error occurred. Please try again.', 'error');
+                    })
+                    .finally(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    });
+                });
+            }
+        });
+        
+        function showFeedbackMessage(message, type) {
+            // Remove existing message if any
+            const existingMessage = document.querySelector('.feedback-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            // Create message element
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `feedback-message ${type}`;
+            messageDiv.textContent = message;
+            
+            // Insert after feedback form
+            const feedbackFormContainer = document.querySelector('.feedback-form-container');
+            feedbackFormContainer.appendChild(messageDiv);
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                messageDiv.style.opacity = '0';
+                setTimeout(() => {
+                    messageDiv.remove();
+                }, 300);
+            }, 3000);
+        }
+    </script>
+    <script>
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
         // Sidebar functionality - moved to top so it's available immediately
        
         (() => {
@@ -156,6 +407,12 @@ $file_url = urldecode($_GET['file_url']);
             let isPaused = false;
             let currentWordIdx = 0;
             let startWordIdx = 0;
+<<<<<<< HEAD
+=======
+            let pausedAtWordIdx = 0;
+            let currentPageNumber = 1;
+            let totalPages = 0;
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 
 			// Simple heuristic syllabifier for English words
 			function syllabifyWord(word) {
@@ -219,19 +476,97 @@ $file_url = urldecode($_GET['file_url']);
 				return Array.from(variants).filter(Boolean);
 			}
 
+<<<<<<< HEAD
 			// Robust definition fetcher prioritizing dictionaryapi.dev, with fallback to Wiktionary
 			async function fetchDefinitionWithFallback(word) {
 				const lower = (word || '').toLowerCase();
 				if (!lower) return '';
 				// 1) Primary: dictionaryapi.dev with lemmatized variants
+=======
+			// Robust definition fetcher prioritizing helpful local overrides, then Wiktionary, with fallback to dictionaryapi.dev
+			async function fetchDefinitionWithFallback(word) {
+				const lower = (word || '').toLowerCase();
+				if (!lower) return '';
+				
+				// 0) Local overrides for short/common pronouns and function words that
+				// sometimes return unhelpful technical definitions from public APIs.
+				const LOCAL_DEFINITIONS = {
+					he: 'Third-person singular pronoun referring to a male person.',
+					she: 'Third-person singular pronoun referring to a female person.',
+					they: 'Pronoun referring to one or more people or things; also singular gender-neutral.',
+					it: 'Pronoun referring to a thing, animal, idea, or situation.',
+					and: 'Coordinating conjunction connecting words, phrases, or clauses of equal rank.',
+					the: 'Definite article used before a noun to specify a particular one.',
+					for: 'Preposition meaning intended for, in support of, or because of.',
+					are: 'Present tense plural form of the verb "to be"; used with you, we, they, or plural nouns.',
+					is: 'Present tense singular form of the verb "to be"; used with he, she, it, or singular nouns.',
+					am: 'Present tense first-person singular form of the verb "to be"; used with "I".',
+					was: 'Past tense form of "to be"; used with I, he, she, it, or singular nouns.',
+					were: 'Past tense form of "to be"; used with you, we, they, or plural nouns.',
+					i: 'First-person singular pronoun used by the speaker.',
+					me: 'First-person singular objective pronoun (object form of "I").',
+					we: 'First-person plural pronoun used by the speaker and others.',
+					you: 'Second-person pronoun referring to the listener or reader.',
+					him: 'Objective case of "he".',
+					her: 'Objective case of "she"; also possessive adjective/pronoun.',
+					his: 'Possessive adjective or pronoun related to "he".',
+					hers: 'Possessive pronoun related to "she".',
+					our: 'Possessive adjective related to "we".',
+					ours: 'Possessive pronoun related to "we".',
+					your: 'Possessive adjective related to "you".',
+					yours: 'Possessive pronoun related to "you".',
+					their: 'Possessive adjective related to "they".',
+					theirs: 'Possessive pronoun related to "they".',
+					them: 'Objective case of "they".',
+					myself: 'Reflexive form of "I".',
+					yourself: 'Reflexive form of "you".',
+					himself: 'Reflexive form of "he".',
+					herself: 'Reflexive form of "she".',
+					itself: 'Reflexive form of "it".',
+					ourselves: 'Reflexive form of "we".',
+					yourselves: 'Reflexive form of "you".',
+					themselves: 'Reflexive form of "they".'
+				};
+				// Try lemmatized/clean variants against local overrides first
+				const localVariants = generateDictionaryVariants(lower);
+				for (let i = 0; i < localVariants.length; i++) {
+					const v = localVariants[i];
+					if (LOCAL_DEFINITIONS[v]) return LOCAL_DEFINITIONS[v];
+				}
+				
+				// 1) Primary: Wiktionary REST API (CORS-enabled)
+				try {
+					const res = await fetch(`https://en.wiktionary.org/api/rest_v1/page/definition/${encodeURIComponent(lower)}`);
+					if (res.ok) {
+						const data = await res.json();
+						// Structure: { en: [ { partOfSpeech, definitions: [ {definition, examples?} ] }, ... ] }
+						const en = data?.en;
+						if (Array.isArray(en) && en.length) {
+							for (let i = 0; i < en.length; i++) {
+								const d = en[i]?.definitions?.[0]?.definition;
+								if (d && typeof d === 'string' && d.trim()) return d.replace(/<[^>]+>/g, '').trim();
+							}
+						}
+					}
+				} catch (e) { /* try fallback */ }
+
+				// 2) Fallback: dictionaryapi.dev with lemmatized variants
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 				const variants = generateDictionaryVariants(lower);
 				for (let i = 0; i < variants.length; i++) {
 					const q = variants[i];
 					try {
+<<<<<<< HEAD
 						const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(q)}`);
 						if (!res.ok) continue;
 						const data = await res.json();
 						const entry = Array.isArray(data) ? data[0] : null;
+=======
+						const res2 = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(q)}`);
+						if (!res2.ok) continue;
+						const data2 = await res2.json();
+						const entry = Array.isArray(data2) ? data2[0] : null;
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 						const meanings = entry?.meanings;
 						if (Array.isArray(meanings)) {
 							for (let m = 0; m < meanings.length; m++) {
@@ -242,6 +577,7 @@ $file_url = urldecode($_GET['file_url']);
 					} catch (e) { /* try next variant */ }
 				}
 
+<<<<<<< HEAD
 				// 2) Fallback: Wiktionary REST API (CORS-enabled)
 				try {
 					const res2 = await fetch(`https://en.wiktionary.org/api/rest_v1/page/definition/${encodeURIComponent(lower)}`);
@@ -258,6 +594,8 @@ $file_url = urldecode($_GET['file_url']);
 					}
 				} catch (e) {}
 
+=======
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 				return '';
 			}
 
@@ -296,28 +634,141 @@ $file_url = urldecode($_GET['file_url']);
                     charCount += span.textContent.length + 1;
                 });
             }
+<<<<<<< HEAD
+=======
+            
+            // Detect current visible page based on scroll position
+            function getCurrentPage() {
+                const pageBreaks = Array.from(document.querySelectorAll('.page-break'));
+                const scrollPosition = window.scrollY + 100; // offset for navbar
+                
+                if (pageBreaks.length === 0) return 1;
+                
+                for (let i = pageBreaks.length - 1; i >= 0; i--) {
+                    if (pageBreaks[i].offsetTop <= scrollPosition) {
+                        return parseInt(pageBreaks[i].getAttribute('data-page-marker'));
+                    }
+                }
+                return 1;
+            }
+            
+            // Get word spans for a specific page
+            function getPageWordSpans(pageNum) {
+                return wordSpans.filter(span => {
+                    const spanPage = parseInt(span.getAttribute('data-page-num'));
+                    return spanPage === pageNum;
+                });
+            }
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.worker.min.js';
             
             async function extractTextItemsFromPdf(fileUrl) {
                 const pdfDoc = await pdfjsLib.getDocument(fileUrl).promise;
                 let items = [];
+<<<<<<< HEAD
                 for (let i = 1; i <= pdfDoc.numPages; i++) {
                     const page = await pdfDoc.getPage(i);
                     const textContent = await page.getTextContent();
+=======
+                
+                for (let i = 1; i <= pdfDoc.numPages; i++) {
+                    const page = await pdfDoc.getPage(i);
+                    const viewport = page.getViewport({ scale: 1.5 });
+                    
+                    // Get operators to find images
+                    const ops = await page.getOperatorList();
+                    const textContent = await page.getTextContent();
+                    
+                    // Create a map of Y positions for text and images
+                    let contentMap = [];
+                    
+                    // Extract actual images from the page
+                    const images = [];
+                    for (let j = 0; j < ops.fnArray.length; j++) {
+                        if (ops.fnArray[j] === pdfjsLib.OPS.paintImageXObject || 
+                            ops.fnArray[j] === pdfjsLib.OPS.paintJpegXObject) {
+                            const imageName = ops.argsArray[j][0];
+                            try {
+                                const image = await page.objs.get(imageName);
+                                if (image) {
+                                    // Create canvas for this specific image
+                                    const canvas = document.createElement('canvas');
+                                    const ctx = canvas.getContext('2d');
+                                    
+                                    canvas.width = image.width;
+                                    canvas.height = image.height;
+                                    
+                                    // Check if image has RGBA data already
+                                    if (image.data) {
+                                        const imgData = ctx.createImageData(image.width, image.height);
+                                        const data = image.data;
+                                        
+                                        // Handle different color formats
+                                        if (image.kind === 1) { // Grayscale
+                                            for (let k = 0; k < data.length; k++) {
+                                                const idx = k * 4;
+                                                imgData.data[idx] = data[k];     // R
+                                                imgData.data[idx + 1] = data[k]; // G
+                                                imgData.data[idx + 2] = data[k]; // B
+                                                imgData.data[idx + 3] = 255;     // A
+                                            }
+                                        } else if (data.length === image.width * image.height * 4) {
+                                            // Already RGBA
+                                            imgData.data.set(data);
+                                        } else {
+                                            // RGB - convert to RGBA
+                                            for (let k = 0; k < data.length; k += 3) {
+                                                const idx = (k / 3) * 4;
+                                                imgData.data[idx] = data[k];         // R
+                                                imgData.data[idx + 1] = data[k + 1]; // G
+                                                imgData.data[idx + 2] = data[k + 2]; // B
+                                                imgData.data[idx + 3] = 255;         // A
+                                            }
+                                        }
+                                        
+                                        ctx.putImageData(imgData, 0, 0);
+                                        images.push(canvas);
+                                    } else if (image.bitmap) {
+                                        // Use bitmap if available
+                                        ctx.drawImage(image.bitmap, 0, 0);
+                                        images.push(canvas);
+                                    }
+                                }
+                            } catch (e) {
+                                console.warn('Could not extract image:', imageName, e);
+                            }
+                        }
+                    }
+                    
+                    // Extract text with positions
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                     let lastY = null;
                     let lastX = null;
                     let line = '';
                     let lineFontSizes = [];
+<<<<<<< HEAD
+=======
+                    let lineYPos = 0;
+                    
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                     textContent.items.forEach(item => {
                         const thisY = item.transform[5];
                         const thisX = item.transform[4];
 
                         if (lastY !== null && Math.abs(thisY - lastY) > 5) {
                             if (line.trim().length > 0) {
+<<<<<<< HEAD
                                 items.push({
                                     text: line.trim(),
                                     fontSize: Math.round(Math.max(...lineFontSizes))
+=======
+                                contentMap.push({
+                                    type: 'text',
+                                    text: line.trim(),
+                                    fontSize: Math.round(Math.max(...lineFontSizes)),
+                                    yPos: viewport.height - lineYPos
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                                 });
                             }
                             line = '';
@@ -331,10 +782,15 @@ $file_url = urldecode($_GET['file_url']);
                         line += item.str;
                         lineFontSizes.push(item.transform[0]);
                         lastY = thisY;
+<<<<<<< HEAD
+=======
+                        lineYPos = thisY;
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                         lastX = thisX + item.width;
                     });
 
                     if (line.trim().length > 0) {
+<<<<<<< HEAD
                         items.push({
                             text: line.trim(),
                             fontSize: Math.round(Math.max(...lineFontSizes))
@@ -342,6 +798,62 @@ $file_url = urldecode($_GET['file_url']);
                     }
 
                     items.push({text: '', fontSize: 0});
+=======
+                        contentMap.push({
+                            type: 'text',
+                            text: line.trim(),
+                            fontSize: Math.round(Math.max(...lineFontSizes)),
+                            yPos: viewport.height - lineYPos
+                        });
+                    }
+                    
+                    // Add images to contentMap with proper Y positions
+                    // Get image positions from the operator list
+                    let imagePositions = [];
+                    for (let j = 0; j < ops.fnArray.length; j++) {
+                        if (ops.fnArray[j] === pdfjsLib.OPS.paintImageXObject || 
+                            ops.fnArray[j] === pdfjsLib.OPS.paintJpegXObject) {
+                            // Look for transform matrix before the paint operation
+                            let transformIdx = j - 1;
+                            while (transformIdx >= 0 && ops.fnArray[transformIdx] !== pdfjsLib.OPS.transform) {
+                                transformIdx--;
+                            }
+                            if (transformIdx >= 0 && ops.argsArray[transformIdx]) {
+                                const transform = ops.argsArray[transformIdx];
+                                // Y position is in transform[5]
+                                const yPos = viewport.height - (transform[5] || 0);
+                                imagePositions.push(yPos);
+                            }
+                        }
+                    }
+                    
+                    // Add images with their positions
+                    images.forEach((canvas, idx) => {
+                        contentMap.push({
+                            type: 'image',
+                            canvas: canvas,
+                            yPos: imagePositions[idx] || (idx * 200),
+                            pageNum: i
+                        });
+                    });
+                    
+                    // Sort all content by Y position to get proper order
+                    contentMap.sort((a, b) => a.yPos - b.yPos);
+                    
+                    // Add page number to all items
+                    contentMap.forEach(item => {
+                        item.pageNum = i;
+                    });
+                    
+                    items.push(...contentMap);
+                    
+                    // Add page break BEFORE next page (except before the first page)
+                    if (i < pdfDoc.numPages) {
+                        items.push({type: 'pagebreak', pageNum: i + 1});
+                    }
+                    
+                    items.push({type: 'text', text: '', fontSize: 0, yPos: 9999, pageNum: i});
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                 }
                 return items;
             }
@@ -350,7 +862,48 @@ $file_url = urldecode($_GET['file_url']);
                 const fragment = document.createDocumentFragment();
                 let wordIndex = 0;
                 items.forEach(item => {
+<<<<<<< HEAD
                     if (!item.text.trim()) return;
+=======
+                    // Handle page break
+                    if (item.type === 'pagebreak') {
+                        const pageBreak = document.createElement('div');
+                        pageBreak.className = 'page-break';
+                        pageBreak.setAttribute('data-page-marker', item.pageNum);
+                        pageBreak.style.cssText = `
+                            margin: 40px 0 30px 0;
+                            padding: 15px 0;
+                            border-top: 2px solid #e0e0e0;
+                            text-align: center;
+                            color: #999;
+                            font-size: 13px;
+                            font-weight: 500;
+                        `;
+                        pageBreak.textContent = `Page ${item.pageNum}`;
+                        fragment.appendChild(pageBreak);
+                        return;
+                    }
+                    
+                    // Handle image items
+                    if (item.type === 'image') {
+                        const imgDiv = document.createElement('div');
+                        imgDiv.className = 'pdf-image-container';
+                        imgDiv.style.cssText = 'margin: 15px 0; text-align: center;';
+                        
+                        const img = document.createElement('img');
+                        img.src = item.canvas.toDataURL();
+                         // Image sizes
+                        img.style.cssText = 'max-width: 300px; width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);';
+                        img.alt = `Image from page ${item.pageNum}`;
+                        
+                        imgDiv.appendChild(img);
+                        fragment.appendChild(imgDiv);
+                        return;
+                    }
+                    
+                    // Handle text items
+                    if (!item.text || !item.text.trim()) return;
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                     let className = '';
                     if (item.fontSize >= 20) {
                         className = 'pdf-title';
@@ -379,6 +932,10 @@ $file_url = urldecode($_GET['file_url']);
                             span.textContent = part;
                             span.tabIndex = 0;
                             span.setAttribute('data-word-index', wordIndex++);
+<<<<<<< HEAD
+=======
+                            span.setAttribute('data-page-num', item.pageNum || 1);
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                             div.appendChild(span);
                         } else {
                             // punctuation or other symbols
@@ -425,7 +982,15 @@ $file_url = urldecode($_GET['file_url']);
                 highlightNarrateBtn.disabled = true;
                 try {
                     const items = await extractTextItemsFromPdf(fileUrl);
+<<<<<<< HEAD
                     pdfText = items.map(item => item.text).join('\n');
+=======
+                    // Build pdfText from text items only (not images)
+                    pdfText = items
+                        .filter(item => item.type === 'text' && item.text)
+                        .map(item => item.text)
+                        .join('\n');
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                     contentDiv.innerHTML = '';
                     const fragment = renderTextItemsToHtml(items);
                     contentDiv.appendChild(fragment);
@@ -459,6 +1024,7 @@ $file_url = urldecode($_GET['file_url']);
 			playPauseBtn.addEventListener('click', () => {
 				if (!utterance) {
 					wordSpans = Array.from(document.querySelectorAll('.word'));
+<<<<<<< HEAD
 					// Build text from the DOM (from current starting word) to preserve punctuation and natural pauses
 					let speakText = '';
 					let range;
@@ -470,6 +1036,45 @@ $file_url = urldecode($_GET['file_url']);
 					} else {
 						speakText = contentDiv.innerText || contentDiv.textContent || '';
 					}
+=======
+					
+					// Get current page
+					currentPageNumber = getCurrentPage();
+					
+					// Get words only from current page
+					const pageWords = getPageWordSpans(currentPageNumber);
+					
+					if (pageWords.length === 0) {
+						alert('No text found on current page');
+						return;
+					}
+					
+					// Determine starting word index - use paused position if resuming on same page
+					let resumeFromIdx = 0;
+					if (isPaused && pausedAtWordIdx >= 0) {
+						const pausedWord = wordSpans[pausedAtWordIdx];
+						if (pausedWord && parseInt(pausedWord.getAttribute('data-page-num')) === currentPageNumber) {
+							resumeFromIdx = pageWords.indexOf(pausedWord);
+							if (resumeFromIdx === -1) resumeFromIdx = 0;
+						}
+					}
+					
+					// Build text from current page only
+					let speakText = '';
+					let range;
+					if (pageWords[resumeFromIdx]) {
+						range = document.createRange();
+						range.setStartBefore(pageWords[resumeFromIdx]);
+						range.setEndAfter(pageWords[pageWords.length - 1]);
+						speakText = range.toString();
+					}
+					
+					if (!speakText) {
+						alert('No text to read on current page');
+						return;
+					}
+					
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 					utterance = new SpeechSynthesisUtterance(speakText);
                     utterance.lang = 'en-US';
                     utterance.rate = parseFloat(speedControl.value) * 0.65;
@@ -478,12 +1083,21 @@ $file_url = urldecode($_GET['file_url']);
                     const selectedVoice = selectedVoiceIndex !== '' ? voices[selectedVoiceIndex] || voices[0] : voices[0];
                     utterance.voice = selectedVoice;
 
+<<<<<<< HEAD
 					// Build boundaries of each subsequent word span within the speakText, so we can map charIndex → word
 					let activeWordSpans = [];
 					let activeBoundaries = [];
 					if (range) {
 						for (let i = startWordIdx; i < wordSpans.length; i++) {
 							const wordNode = wordSpans[i];
+=======
+					// Build boundaries of each word span in current page within the speakText
+					let activeWordSpans = [];
+					let activeBoundaries = [];
+					if (range) {
+						for (let i = resumeFromIdx; i < pageWords.length; i++) {
+							const wordNode = pageWords[i];
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 							const wordRange = document.createRange();
 							wordRange.selectNodeContents(wordNode);
 							const preRange = document.createRange();
@@ -509,13 +1123,22 @@ $file_url = urldecode($_GET['file_url']);
 						if (wordIndex === -1) return;
 						document.querySelectorAll('.word').forEach(span => span.classList.remove('tts-highlight'));
 						const currentWordSpan = activeWordSpans[wordIndex];
+<<<<<<< HEAD
 						if (currentWordSpan) currentWordSpan.classList.add('tts-highlight');
+=======
+						if (currentWordSpan) {
+							currentWordSpan.classList.add('tts-highlight');
+							// Track current word position in global wordSpans array
+							currentWordIdx = wordSpans.indexOf(currentWordSpan);
+						}
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 					};
                     utterance.onend = () => {
                         playPauseBtn.textContent = '▶️ Play';
                         utterance = null;
                         clearTTSHighlight();
                         startWordIdx = 0;
+<<<<<<< HEAD
                     };
                     window.speechSynthesis.speak(utterance);
                     playPauseBtn.textContent = '⏸️ Pause';
@@ -527,6 +1150,22 @@ $file_url = urldecode($_GET['file_url']);
                     window.speechSynthesis.pause();
                     playPauseBtn.textContent = '▶️ Play';
                     isPaused = true;
+=======
+                        pausedAtWordIdx = 0;
+                        isPaused = false;
+                    };
+                    window.speechSynthesis.speak(utterance);
+                    playPauseBtn.textContent = '⏸️ Pause';
+                    isPaused = false;
+                } else {
+                    // Pause: cancel current utterance and store position
+                    window.speechSynthesis.cancel();
+                    playPauseBtn.textContent = '▶️ Play';
+                    isPaused = true;
+                    // Store the current word position when pausing
+                    pausedAtWordIdx = currentWordIdx;
+                    utterance = null;
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                 }
             });
 
@@ -537,6 +1176,11 @@ $file_url = urldecode($_GET['file_url']);
                     playPauseBtn.textContent = '▶️ Play';
                     clearTTSHighlight();
                     startWordIdx = 0;
+<<<<<<< HEAD
+=======
+                    pausedAtWordIdx = 0;
+                    isPaused = false;
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                 }
             });
 
@@ -592,6 +1236,7 @@ $file_url = urldecode($_GET['file_url']);
                     popupMeaning.textContent = 'No information found.';
                 }
 
+<<<<<<< HEAD
                 if (utterance) {
                     window.speechSynthesis.cancel();
                     utterance = null;
@@ -599,6 +1244,20 @@ $file_url = urldecode($_GET['file_url']);
                 startWordIdx = parseInt(target.getAttribute('data-word-index'));
                 playPauseBtn.textContent = '▶️ Play';
                 clearTTSHighlight();
+=======
+                // If TTS is currently playing, pause it and save position
+                if (utterance) {
+                    window.speechSynthesis.cancel();
+                    utterance = null;
+                    // Save current position if we were playing
+                    if (!isPaused) {
+                        pausedAtWordIdx = currentWordIdx;
+                        isPaused = true;
+                    }
+                    playPauseBtn.textContent = '▶️ Play';
+                    clearTTSHighlight();
+                }
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
             });
 
             // Removed outside-click close to allow interacting with popup without it closing
@@ -748,5 +1407,82 @@ $file_url = urldecode($_GET['file_url']);
             };
 
         </script>
+<<<<<<< HEAD
+=======
+
+    <script>
+        // Settings Modal Functions (copied from studentmodule.php)
+        function showSettings() {
+            var m = document.getElementById('settingsModal');
+            if (m) m.style.display = 'flex';
+        }
+
+        function updateFontSize(value) {
+            document.documentElement.style.setProperty('--font-size', value + 'px');
+            var el = document.getElementById('fontSizeValue');
+            if (el) el.textContent = value + 'px';
+        }
+
+        function updateLineHeight(value) {
+            document.documentElement.style.setProperty('--line-height', value);
+            var el = document.getElementById('lineHeightValue');
+            if (el) el.textContent = value;
+        }
+
+        function resetSettings() {
+            document.documentElement.style.setProperty('--font-size', '16px');
+            document.documentElement.style.setProperty('--line-height', '1.6');
+            var fs = document.getElementById('fontSize');
+            var lh = document.getElementById('lineHeight');
+            if (fs) fs.value = 16;
+            if (lh) lh.value = 1.6;
+            var fsv = document.getElementById('fontSizeValue');
+            var lhv = document.getElementById('lineHeightValue');
+            if (fsv) fsv.textContent = '16px';
+            if (lhv) lhv.textContent = '1.6';
+        }
+
+        function saveSettings() {
+            var fontSize = document.getElementById('fontSize')?.value;
+            var lineHeight = document.getElementById('lineHeight')?.value;
+            if (fontSize != null) localStorage.setItem('fontSize', fontSize);
+            if (lineHeight != null) localStorage.setItem('lineHeight', lineHeight);
+            alert('Settings saved successfully!');
+            var m = document.getElementById('settingsModal');
+            if (m) m.style.display = 'none';
+        }
+
+        // Close settings modal
+        (function(){
+            var closeBtn = document.getElementById('close-settings-modal');
+            if (closeBtn) {
+                closeBtn.onclick = function() {
+                    var m = document.getElementById('settingsModal');
+                    if (m) m.style.display = 'none';
+                };
+            }
+            // Load saved settings on page load
+            window.addEventListener('load', function() {
+                var savedFontSize = localStorage.getItem('fontSize');
+                var savedLineHeight = localStorage.getItem('lineHeight');
+                if (savedFontSize) {
+                    document.documentElement.style.setProperty('--font-size', savedFontSize + 'px');
+                    var fs = document.getElementById('fontSize');
+                    var fsv = document.getElementById('fontSizeValue');
+                    if (fs) fs.value = savedFontSize;
+                    if (fsv) fsv.textContent = savedFontSize + 'px';
+                }
+                if (savedLineHeight) {
+                    document.documentElement.style.setProperty('--line-height', savedLineHeight);
+                    var lh = document.getElementById('lineHeight');
+                    var lhv = document.getElementById('lineHeightValue');
+                    if (lh) lh.value = savedLineHeight;
+                    if (lhv) lhv.textContent = savedLineHeight;
+                }
+            });
+        })();
+    </script>
+
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 </body>
 </html>

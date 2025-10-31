@@ -1,0 +1,143 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    background-color: #fcfbd7;
+    font-family: 'OpenDyslexic', sans-serif;
+}
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('fonts/OpenDyslexic-Bold.otf') format('opentype'),
+        url('fonts/OpenDyslexic-Regular.otf') format('opentype');
+}
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background-color: #fcfbd7;
+    border-bottom: 1px solid #ccc;
+    z-index: 1000;
+}
+.burger-menu {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+.burger-menu div {
+    width: 25px;
+    height: 3px;
+    background-color: black;
+    margin: 4px 0;
+}
+.nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 30px;
+    font-weight: bold;
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 20px;
+}
+.user-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -500px; /* Set to -400px to completely hide the sidebar */
+    width: 400px;
+    height: 100%;
+    background-color: #fcfbd7;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: left 0.3s ease;
+    z-index: 10000;
+    overflow-y: auto;
+}
+.sidebar.active {
+    left: 0;
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.sidebar ul li {
+    margin: 20px 0;
+}
+.sidebar ul li a {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s;
+    padding: 10px;
+}
+.sidebar ul li a:hover {
+    background-color: #ffcc00; /* Highlight color on hover */
+    color: white;
+    border-radius: 5px;
+}
+.sidebar ul li a img{
+    width: 30px; /* Adjust the size of the icons */
+    height: 30px;
+    padding-right: 20px; /* Space between icon and text */
+}
+
+.dropdown-menu {
+    display: none; /* Hide the dropdown by default */
+    list-style: none;
+    padding: 0;
+    margin: 0px;
+    width: 300px; /* Set a fixed width */
+    position: absolute; /* Position it below the parent item */
+    background-color: #fcfbd7; /* Match sidebar background */
+    padding: 10px; /* Add some padding */
+    border-radius: 5px; /* Optional: round the corners */
+    left: 50px;
+}
+.dropdown-menu li {
+    margin: 0; /* Remove margin for dropdown items */
+}
+.dropdown-menu li a {
+    padding: 5px 10px; /* Add padding for dropdown links */
+    color: black; /* Text color */
+    text-decoration: none; /* Remove underline */
+}
+.dropdown-menu li {
+    margin: 0; /* Remove margin for dropdown items */
+}
+.dropdown-menu li a {
+    padding: 5px 10px; /* Add padding for dropdown links */
+    color: black; /* Text color */
+    text-decoration: none; /* Remove underline */
+}
+.dropdown-menu.active {
+    display: block; /* Show the dropdown when active */
+    position: absolute; /* Position it below the parent item */
+    background-color: #fcfbd7; /* Match sidebar background */
+    padding: 10px; /* Add some padding */
+    border-radius: 5px; /* Rounded corners */
+    border-left: 2px solid #ffcc00; /* Left border for visual separation */
+}
+@media  (max-width: 768px) {
+    .sidebar{
+    width: 250px;
+    }
+    .dropdown-menu {
+        width: 250px; /* Full width on mobile */
+    }
+}
