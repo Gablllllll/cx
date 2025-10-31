@@ -7,6 +7,8 @@ if (!isset($_GET['file_url'])) {
 }
 
 $file_url = urldecode($_GET['file_url']);
+<<<<<<< HEAD
+=======
 
 // Get material information
 $material_query = "SELECT material_id, title FROM learning_materials WHERE file_url = ?";
@@ -60,6 +62,7 @@ $avg_stmt->close();
 
 $average_rating = $avg_data['avg_rating'] ? round($avg_data['avg_rating'], 1) : 0;
 $total_feedback = $avg_data['total_feedback'];
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -81,12 +84,18 @@ $total_feedback = $avg_data['total_feedback'];
         <!-- Title -->
         <div class="nav-center">ClassXic</div>
         <!-- User Info -->
+<<<<<<< HEAD
+        <div class="user-info">
+            <span><?php echo htmlspecialchars($_SESSION['first_name']); ?></span>
+            <img src="Images/user-svgrepo-com.svg" alt="User Icon">
+=======
         <div class="user-info" onclick="toggleUserDropdown()" style="cursor: pointer;">
             <span><?php echo htmlspecialchars($_SESSION['first_name']); ?></span>
             <img src="Images/user-svgrepo-com.svg" alt="User Icon">
             <div class="user-dropdown" id="userDropdown">
                 <a href="#" onclick="showSettings()">Settings</a>
             </div>
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
         </div>
     </nav>
 
@@ -115,7 +124,12 @@ $total_feedback = $avg_data['total_feedback'];
                     <li>
                         <a href="#" class="dropdown-toggle"><img src="Images/option.png" alt="Option Icon">Option</a>
                         <ul class="dropdown-menu">
+<<<<<<< HEAD
+                          
+                            <li><a href="settings.php"><img src="Images/settings-2-svgrepo-com.svg" alt="Settings Icon"> Settings</a></li>
+=======
                             <li><a href="#" onclick="showSettings()"><img src="Images/settings-2-svgrepo-com.svg" alt="Settings Icon"> Settings</a></li>
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                             <li><a href="logout.php"><img src="Images/logout-svgrepo-com.svg" alt="Logout Icon">Log out</a></li>
                         </ul>
                     </li>
@@ -181,6 +195,13 @@ $total_feedback = $avg_data['total_feedback'];
                 </button>
             </div>
         </div>
+<<<<<<< HEAD
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.min.js"></script>
+    <script src="script/modules.js"></script>
+    <script>
+=======
 
         <!-- Feedback Section -->
         <div class="feedback-section">
@@ -360,6 +381,7 @@ $total_feedback = $avg_data['total_feedback'];
         }
     </script>
     <script>
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
         // Sidebar functionality - moved to top so it's available immediately
        
         (() => {
@@ -385,9 +407,12 @@ $total_feedback = $avg_data['total_feedback'];
             let isPaused = false;
             let currentWordIdx = 0;
             let startWordIdx = 0;
+<<<<<<< HEAD
+=======
             let pausedAtWordIdx = 0;
             let currentPageNumber = 1;
             let totalPages = 0;
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 
 			// Simple heuristic syllabifier for English words
 			function syllabifyWord(word) {
@@ -451,6 +476,13 @@ $total_feedback = $avg_data['total_feedback'];
 				return Array.from(variants).filter(Boolean);
 			}
 
+<<<<<<< HEAD
+			// Robust definition fetcher prioritizing dictionaryapi.dev, with fallback to Wiktionary
+			async function fetchDefinitionWithFallback(word) {
+				const lower = (word || '').toLowerCase();
+				if (!lower) return '';
+				// 1) Primary: dictionaryapi.dev with lemmatized variants
+=======
 			// Robust definition fetcher prioritizing helpful local overrides, then Wiktionary, with fallback to dictionaryapi.dev
 			async function fetchDefinitionWithFallback(word) {
 				const lower = (word || '').toLowerCase();
@@ -519,14 +551,22 @@ $total_feedback = $avg_data['total_feedback'];
 				} catch (e) { /* try fallback */ }
 
 				// 2) Fallback: dictionaryapi.dev with lemmatized variants
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 				const variants = generateDictionaryVariants(lower);
 				for (let i = 0; i < variants.length; i++) {
 					const q = variants[i];
 					try {
+<<<<<<< HEAD
+						const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(q)}`);
+						if (!res.ok) continue;
+						const data = await res.json();
+						const entry = Array.isArray(data) ? data[0] : null;
+=======
 						const res2 = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(q)}`);
 						if (!res2.ok) continue;
 						const data2 = await res2.json();
 						const entry = Array.isArray(data2) ? data2[0] : null;
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 						const meanings = entry?.meanings;
 						if (Array.isArray(meanings)) {
 							for (let m = 0; m < meanings.length; m++) {
@@ -537,6 +577,25 @@ $total_feedback = $avg_data['total_feedback'];
 					} catch (e) { /* try next variant */ }
 				}
 
+<<<<<<< HEAD
+				// 2) Fallback: Wiktionary REST API (CORS-enabled)
+				try {
+					const res2 = await fetch(`https://en.wiktionary.org/api/rest_v1/page/definition/${encodeURIComponent(lower)}`);
+					if (res2.ok) {
+						const data2 = await res2.json();
+						// Structure: { en: [ { partOfSpeech, definitions: [ {definition, examples?} ] }, ... ] }
+						const en = data2?.en;
+						if (Array.isArray(en) && en.length) {
+							for (let i = 0; i < en.length; i++) {
+								const d = en[i]?.definitions?.[0]?.definition;
+								if (d && typeof d === 'string' && d.trim()) return d.replace(/<[^>]+>/g, '').trim();
+							}
+						}
+					}
+				} catch (e) {}
+
+=======
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 				return '';
 			}
 
@@ -575,6 +634,8 @@ $total_feedback = $avg_data['total_feedback'];
                     charCount += span.textContent.length + 1;
                 });
             }
+<<<<<<< HEAD
+=======
             
             // Detect current visible page based on scroll position
             function getCurrentPage() {
@@ -598,12 +659,18 @@ $total_feedback = $avg_data['total_feedback'];
                     return spanPage === pageNum;
                 });
             }
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.worker.min.js';
             
             async function extractTextItemsFromPdf(fileUrl) {
                 const pdfDoc = await pdfjsLib.getDocument(fileUrl).promise;
                 let items = [];
+<<<<<<< HEAD
+                for (let i = 1; i <= pdfDoc.numPages; i++) {
+                    const page = await pdfDoc.getPage(i);
+                    const textContent = await page.getTextContent();
+=======
                 
                 for (let i = 1; i <= pdfDoc.numPages; i++) {
                     const page = await pdfDoc.getPage(i);
@@ -675,23 +742,33 @@ $total_feedback = $avg_data['total_feedback'];
                     }
                     
                     // Extract text with positions
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                     let lastY = null;
                     let lastX = null;
                     let line = '';
                     let lineFontSizes = [];
+<<<<<<< HEAD
+=======
                     let lineYPos = 0;
                     
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                     textContent.items.forEach(item => {
                         const thisY = item.transform[5];
                         const thisX = item.transform[4];
 
                         if (lastY !== null && Math.abs(thisY - lastY) > 5) {
                             if (line.trim().length > 0) {
+<<<<<<< HEAD
+                                items.push({
+                                    text: line.trim(),
+                                    fontSize: Math.round(Math.max(...lineFontSizes))
+=======
                                 contentMap.push({
                                     type: 'text',
                                     text: line.trim(),
                                     fontSize: Math.round(Math.max(...lineFontSizes)),
                                     yPos: viewport.height - lineYPos
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                                 });
                             }
                             line = '';
@@ -705,11 +782,23 @@ $total_feedback = $avg_data['total_feedback'];
                         line += item.str;
                         lineFontSizes.push(item.transform[0]);
                         lastY = thisY;
+<<<<<<< HEAD
+=======
                         lineYPos = thisY;
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                         lastX = thisX + item.width;
                     });
 
                     if (line.trim().length > 0) {
+<<<<<<< HEAD
+                        items.push({
+                            text: line.trim(),
+                            fontSize: Math.round(Math.max(...lineFontSizes))
+                        });
+                    }
+
+                    items.push({text: '', fontSize: 0});
+=======
                         contentMap.push({
                             type: 'text',
                             text: line.trim(),
@@ -764,6 +853,7 @@ $total_feedback = $avg_data['total_feedback'];
                     }
                     
                     items.push({type: 'text', text: '', fontSize: 0, yPos: 9999, pageNum: i});
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                 }
                 return items;
             }
@@ -772,6 +862,9 @@ $total_feedback = $avg_data['total_feedback'];
                 const fragment = document.createDocumentFragment();
                 let wordIndex = 0;
                 items.forEach(item => {
+<<<<<<< HEAD
+                    if (!item.text.trim()) return;
+=======
                     // Handle page break
                     if (item.type === 'pagebreak') {
                         const pageBreak = document.createElement('div');
@@ -810,6 +903,7 @@ $total_feedback = $avg_data['total_feedback'];
                     
                     // Handle text items
                     if (!item.text || !item.text.trim()) return;
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                     let className = '';
                     if (item.fontSize >= 20) {
                         className = 'pdf-title';
@@ -838,7 +932,10 @@ $total_feedback = $avg_data['total_feedback'];
                             span.textContent = part;
                             span.tabIndex = 0;
                             span.setAttribute('data-word-index', wordIndex++);
+<<<<<<< HEAD
+=======
                             span.setAttribute('data-page-num', item.pageNum || 1);
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                             div.appendChild(span);
                         } else {
                             // punctuation or other symbols
@@ -885,11 +982,15 @@ $total_feedback = $avg_data['total_feedback'];
                 highlightNarrateBtn.disabled = true;
                 try {
                     const items = await extractTextItemsFromPdf(fileUrl);
+<<<<<<< HEAD
+                    pdfText = items.map(item => item.text).join('\n');
+=======
                     // Build pdfText from text items only (not images)
                     pdfText = items
                         .filter(item => item.type === 'text' && item.text)
                         .map(item => item.text)
                         .join('\n');
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                     contentDiv.innerHTML = '';
                     const fragment = renderTextItemsToHtml(items);
                     contentDiv.appendChild(fragment);
@@ -923,6 +1024,19 @@ $total_feedback = $avg_data['total_feedback'];
 			playPauseBtn.addEventListener('click', () => {
 				if (!utterance) {
 					wordSpans = Array.from(document.querySelectorAll('.word'));
+<<<<<<< HEAD
+					// Build text from the DOM (from current starting word) to preserve punctuation and natural pauses
+					let speakText = '';
+					let range;
+					if (wordSpans[startWordIdx]) {
+						range = document.createRange();
+						range.setStartBefore(wordSpans[startWordIdx]);
+						range.setEndAfter(contentDiv.lastChild);
+						speakText = range.toString();
+					} else {
+						speakText = contentDiv.innerText || contentDiv.textContent || '';
+					}
+=======
 					
 					// Get current page
 					currentPageNumber = getCurrentPage();
@@ -960,6 +1074,7 @@ $total_feedback = $avg_data['total_feedback'];
 						return;
 					}
 					
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 					utterance = new SpeechSynthesisUtterance(speakText);
                     utterance.lang = 'en-US';
                     utterance.rate = parseFloat(speedControl.value) * 0.65;
@@ -968,12 +1083,21 @@ $total_feedback = $avg_data['total_feedback'];
                     const selectedVoice = selectedVoiceIndex !== '' ? voices[selectedVoiceIndex] || voices[0] : voices[0];
                     utterance.voice = selectedVoice;
 
+<<<<<<< HEAD
+					// Build boundaries of each subsequent word span within the speakText, so we can map charIndex → word
+					let activeWordSpans = [];
+					let activeBoundaries = [];
+					if (range) {
+						for (let i = startWordIdx; i < wordSpans.length; i++) {
+							const wordNode = wordSpans[i];
+=======
 					// Build boundaries of each word span in current page within the speakText
 					let activeWordSpans = [];
 					let activeBoundaries = [];
 					if (range) {
 						for (let i = resumeFromIdx; i < pageWords.length; i++) {
 							const wordNode = pageWords[i];
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 							const wordRange = document.createRange();
 							wordRange.selectNodeContents(wordNode);
 							const preRange = document.createRange();
@@ -999,17 +1123,34 @@ $total_feedback = $avg_data['total_feedback'];
 						if (wordIndex === -1) return;
 						document.querySelectorAll('.word').forEach(span => span.classList.remove('tts-highlight'));
 						const currentWordSpan = activeWordSpans[wordIndex];
+<<<<<<< HEAD
+						if (currentWordSpan) currentWordSpan.classList.add('tts-highlight');
+=======
 						if (currentWordSpan) {
 							currentWordSpan.classList.add('tts-highlight');
 							// Track current word position in global wordSpans array
 							currentWordIdx = wordSpans.indexOf(currentWordSpan);
 						}
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 					};
                     utterance.onend = () => {
                         playPauseBtn.textContent = '▶️ Play';
                         utterance = null;
                         clearTTSHighlight();
                         startWordIdx = 0;
+<<<<<<< HEAD
+                    };
+                    window.speechSynthesis.speak(utterance);
+                    playPauseBtn.textContent = '⏸️ Pause';
+                } else if (isPaused) {
+                    window.speechSynthesis.resume();
+                    playPauseBtn.textContent = '⏸️ Pause';
+                    isPaused = false;
+                } else {
+                    window.speechSynthesis.pause();
+                    playPauseBtn.textContent = '▶️ Play';
+                    isPaused = true;
+=======
                         pausedAtWordIdx = 0;
                         isPaused = false;
                     };
@@ -1024,6 +1165,7 @@ $total_feedback = $avg_data['total_feedback'];
                     // Store the current word position when pausing
                     pausedAtWordIdx = currentWordIdx;
                     utterance = null;
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                 }
             });
 
@@ -1034,8 +1176,11 @@ $total_feedback = $avg_data['total_feedback'];
                     playPauseBtn.textContent = '▶️ Play';
                     clearTTSHighlight();
                     startWordIdx = 0;
+<<<<<<< HEAD
+=======
                     pausedAtWordIdx = 0;
                     isPaused = false;
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
                 }
             });
 
@@ -1091,6 +1236,15 @@ $total_feedback = $avg_data['total_feedback'];
                     popupMeaning.textContent = 'No information found.';
                 }
 
+<<<<<<< HEAD
+                if (utterance) {
+                    window.speechSynthesis.cancel();
+                    utterance = null;
+                }
+                startWordIdx = parseInt(target.getAttribute('data-word-index'));
+                playPauseBtn.textContent = '▶️ Play';
+                clearTTSHighlight();
+=======
                 // If TTS is currently playing, pause it and save position
                 if (utterance) {
                     window.speechSynthesis.cancel();
@@ -1103,6 +1257,7 @@ $total_feedback = $avg_data['total_feedback'];
                     playPauseBtn.textContent = '▶️ Play';
                     clearTTSHighlight();
                 }
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
             });
 
             // Removed outside-click close to allow interacting with popup without it closing
@@ -1252,6 +1407,8 @@ $total_feedback = $avg_data['total_feedback'];
             };
 
         </script>
+<<<<<<< HEAD
+=======
 
     <script>
         // Settings Modal Functions (copied from studentmodule.php)
@@ -1326,5 +1483,6 @@ $total_feedback = $avg_data['total_feedback'];
         })();
     </script>
 
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
 </body>
 </html>

@@ -1,4 +1,16 @@
 <?php
+<<<<<<< HEAD
+	if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
+		$uri = 'https://';
+	} else {
+		$uri = 'http://';
+	}
+	$uri .= $_SERVER['HTTP_HOST'];
+	header('Location: '.$uri.'/dashboard/');
+	exit;
+?>
+Something is wrong with the XAMPP installation :-(
+=======
 include "myconnector.php";
 session_start();
 
@@ -455,3 +467,4 @@ if (isset($_POST['login'])) {
 	</script>
 </body>
 </html>
+>>>>>>> 067729d0f90fd66f6e1bcd8b145c2ee3c903b0aa
