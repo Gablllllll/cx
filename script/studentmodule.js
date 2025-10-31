@@ -1,0 +1,161 @@
+
+// Student Module JavaScript
+
+// User dropdown functionality
+function toggleUserDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('active');
+}
+
+// Profile modal functionality
+function openProfileModal() {
+    document.getElementById('profileModal').style.display = 'flex';
+}
+
+function closeProfileModal() {
+    document.getElementById('profileModal').style.display = 'none';
+}
+
+function showTab(tabName, button) {
+    // Hide all tab contents
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // Remove active class from all tab buttons
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    // Show selected tab content
+    document.getElementById(tabName + '-tab').classList.add('active');
+    
+    // Add active class to clicked tab button
+    if (button) {
+        button.classList.add('active');
+    }
+}
+
+// Additional student module specific functionality can be added here if needed
+document.addEventListener('DOMContentLoaded', function() {
+	// Any student module specific JavaScript can go here
+	console.log('Student module page loaded');
+	
+	// Debug: Check if elements exist
+	const userInfo = document.querySelector('.user-info');
+	const dropdown = document.getElementById('userDropdown');
+	const modal = document.getElementById('profileModal');
+	
+	console.log('User info element:', userInfo);
+	console.log('User dropdown element:', dropdown);
+	console.log('Profile modal element:', modal);
+	
+	// Add click event listener to user info if it exists
+	if (userInfo) {
+		console.log('User info click listener added');
+	} else {
+		console.error('User info element not found!');
+	}
+
+    // Sidebar and dropdown click outside functionality is handled by landingpage.js
+
+    // Dropdown functionality is handled by landingpage.js
+
+    // Calendar functionality
+    let currentDate = new Date();
+    let selectedDate = null;
+
+    function updateCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        
+        // Update month/year display
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        document.getElementById('currentMonthYear').textContent = 
+            `${monthNames[month]} ${year}`;
+
+        // Get first day of month and number of days
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startingDayOfWeek = firstDay.getDay();
+
+        // Clear calendar grid
+        const calendarGrid = document.getElementById('calendarGrid');
+        calendarGrid.innerHTML = '';
+
+        // Add day headers
+        const dayHeaders = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+        dayHeaders.forEach(day => {
+            const dayHeader = document.createElement('div');
+            dayHeader.className = 'calendar-day-header';
+            dayHeader.textContent = day;
+            calendarGrid.appendChild(dayHeader);
+        });
+
+        // Add empty cells for days before the first day of the month
+        for (let i = 0; i < startingDayOfWeek; i++) {
+            const emptyDay = document.createElement('div');
+            emptyDay.className = 'calendar-day other-month';
+            emptyDay.textContent = '';
+            calendarGrid.appendChild(emptyDay);
+        }
+
+        // Add days of the month
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day';
+            dayElement.textContent = day;
+
+            // Check if it's today
+            const today = new Date();
+            if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                dayElement.classList.add('today');
+            }
+
+            // Check if it's selected
+            if (selectedDate && 
+                year === selectedDate.getFullYear() && 
+                month === selectedDate.getMonth() && 
+                day === selectedDate.getDate()) {
+                dayElement.classList.add('selected');
+            }
+
+            // Add click event
+            dayElement.addEventListener('click', () => {
+                // Remove previous selection
+                document.querySelectorAll('.calendar-day.selected').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                
+                // Add selection to clicked day
+                dayElement.classList.add('selected');
+                selectedDate = new Date(year, month, day);
+                
+                // Optional: You can add functionality here for when a date is selected
+                console.log('Selected date:', selectedDate.toDateString());
+            });
+
+            calendarGrid.appendChild(dayElement);
+        }
+    }
+
+    // Navigation event listeners
+    document.getElementById('prevMonth').addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        updateCalendar();
+    });
+
+    document.getElementById('nextMonth').addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        updateCalendar();
+    });
+
+    // Initialize calendar
+    updateCalendar();
+});

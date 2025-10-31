@@ -1,0 +1,402 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    background-color: #fcfbd7;
+    font-family: 'OpenDyslexic', sans-serif;
+}
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('fonts/OpenDyslexic-Bold.otf') format('opentype'),
+        url('fonts/OpenDyslexic-Regular.otf') format('opentype');
+}
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-bottom: 1px solid #ccc;
+    z-index: 1000;
+}
+.burger-menu {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+.burger-menu div {
+    width: 25px;
+    height: 3px;
+    background-color: black;
+    margin: 4px 0;
+}
+.nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 30px;
+    font-weight: bold;
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 20px;
+}
+.user-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 350px;
+    height: 100%;
+    background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+    padding: 2rem;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10000;
+    overflow-y: auto;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.sidebar.hidden {
+    left: -400px;
+}
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.sidebar-options {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-options li {
+    position: relative;
+}
+
+.sidebar ul li {
+    margin-bottom: 0.5rem;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    color: #2d3748;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar ul li a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    transition: left 0.3s ease;
+    z-index: -1;
+}
+
+.sidebar ul li a:hover::before {
+    left: 0;
+}
+
+.sidebar ul li a:hover {
+    color: white;
+    transform: translateX(8px);
+    box-shadow: 0 8px 25px rgba(56, 161, 105, 0.3);
+}
+
+.sidebar ul li a img {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+}
+
+.sidebar ul li a:hover img {
+    transform: scale(1.1);
+}
+#calendar {
+    max-width: 1000px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Calendar page specific content positioning */
+.calendar-container {
+    margin-left: 535px; /* Position when sidebar is open */
+    transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: 1200px;
+    margin-top: 100px;
+    padding: 2rem;
+}
+
+body.sidebar-hidden .calendar-container {
+    margin-left: 350px; /* Reset margin when sidebar is closed */
+    transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Footer responsive positioning */
+.site-footer {
+    margin-left: 350px; /* Position when sidebar is open */
+    transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.sidebar-hidden .site-footer {
+    margin-left: 0; /* Reset margin when sidebar is closed */
+    transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.container h1 {
+    display: flex;               /* Use flexbox */
+    flex-direction: column;      /* Stack children vertically */
+    align-items: center;         /* Center items horizontally */
+    justify-content: center;     /* Center items vertically */
+    max-width: 100%;            /* Ensure it doesn't exceed the width */
+    margin-top: 100px;          /* Maintain the top margin */
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth movement when sidebar is hidden */
+body.sidebar-hidden .container h1 {
+    margin-left: 0; /* Reset margin */
+    left: 50%; /* Position from left edge */
+    transform: translateX(-50%); /* Center the header */
+    position: relative; /* Enable positioning */
+    transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.dropdown-menu {
+    display: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 300px;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 15px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    bottom: 100%;
+    left: 0;
+    margin-bottom: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10001;
+}
+.dropdown-menu li {
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-menu li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    color: #2d3748;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.dropdown-menu li a:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transform: translateX(5px);
+}
+
+.dropdown-menu li a img {
+    width: 20px;
+    height: 20px;
+    transition: filter 0.3s ease;
+}
+
+.dropdown-menu li a:hover img {
+    filter: brightness(0) invert(1);
+}
+.dropdown-menu.active {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.calendar-create-modal {
+  background: #fff;
+  padding: 24px 18px 18px 18px;
+  border-radius: 22px;
+  box-shadow: 0 2px 8px #0003;
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  min-width: 320px;
+  border: 2px solid #222;
+  font-family: 'OpenDyslexic', Arial, sans-serif;
+}
+
+.calendar-create-title {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.calendar-create-label {
+  display: block;
+  margin: 10px 0 2px 2px;
+  font-size: 1rem;
+}
+
+.calendar-create-input,
+#userSelect {
+  width: 100%;
+  padding: 8px 16px;
+  border-radius: 22px;
+  border: 2px solid #888;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border 0.2s;
+}
+
+.calendar-create-input:focus,
+#userSelect:focus {
+  border: 2px solid #7c3aed;
+}
+
+#userSelect {
+  margin-bottom: 10px;
+  margin-top: 2px;
+  appearance: none;
+  background: #fff url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' stroke='%23222' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 8 10 12 14 8'/%3E%3C/svg%3E") no-repeat right 12px center/20px 20px;
+}
+
+.calendar-create-btn-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.calendar-create-btn {
+  flex: 1 1 0;
+  padding: 8px 0;
+  border-radius: 18px;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 0;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+
+.calendar-create-btn-green {
+  background: #19d219;
+  color: #fff;
+}
+
+.calendar-create-btn-green:hover {
+  background: #0e9c0e;
+}
+
+.calendar-create-btn-red {
+  background: #f44336;
+  color: #fff;
+}
+
+.calendar-create-btn-red:hover {
+  background: #b71c1c;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0; top: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.05);
+  justify-content: center;
+  align-items: center;
+}
+.calendar-notify-modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 28px 24px 28px;
+  box-shadow: 0 2px 12px #0002;
+  text-align: center;
+  min-width: 260px;
+  position: relative;
+}
+.calendar-notify-checkmark {
+  margin: 0 auto 10px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.calendar-notify-title {
+  margin: 10px 0 6px 0;
+  font-size: 1.5rem;
+  font-family: 'OpenDyslexic', Arial, sans-serif;
+  font-weight: bold;
+}
+.calendar-notify-message {
+  font-size: 1.1rem;
+  font-family: 'OpenDyslexic', Arial, sans-serif;
+  font-weight: 600;
+  color: #222;
+  margin-top: 6px;
+}
+@media (max-width: 768px) {
+    .sidebar {
+        width: 250px;
+    }
+    .dropdown-menu {
+        width: 250px;
+    }
+}
+
