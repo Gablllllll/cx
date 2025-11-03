@@ -256,7 +256,18 @@ if (isset($_POST['login'])) {
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Type Here" required>
+                                <div class="password-input-wrapper">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Type Here" required>
+                                    <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
+                                        <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <svg id="eyeOffIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                                            <path d="M17.94 17.94C16.23 19.24 14.21 20 12 20C5 20 1 12 1 12C2.24 9.24 4.47 7.06 7.06 5.94M14.12 14.12C13.68 14.52 13.15 14.81 12.58 14.96C11.27 15.27 9.94 14.73 9.01 13.8C8.08 12.87 7.54 11.54 7.85 10.23C8 9.66 8.29 9.13 8.69 8.69M9.88 9.88C10.32 9.48 10.85 9.19 11.42 9.04C12.73 8.73 14.06 9.27 14.99 10.2C15.92 11.13 16.46 12.46 16.15 13.77C16 14.34 15.71 14.87 15.31 15.31M1 1L23 23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email Address</label>
@@ -339,7 +350,18 @@ if (isset($_POST['login'])) {
                             </div>
                             <div class="mb-3">
                                 <label for="loginPassword" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Enter your password" required>
+                                <div class="password-input-wrapper">
+                                    <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Enter your password" required>
+                                    <button type="button" class="password-toggle" id="toggleLoginPassword" aria-label="Toggle password visibility">
+                                        <svg id="eyeIconLogin" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <svg id="eyeOffIconLogin" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                                            <path d="M17.94 17.94C16.23 19.24 14.21 20 12 20C5 20 1 12 1 12C2.24 9.24 4.47 7.06 7.06 5.94M14.12 14.12C13.68 14.52 13.15 14.81 12.58 14.96C11.27 15.27 9.94 14.73 9.01 13.8C8.08 12.87 7.54 11.54 7.85 10.23C8 9.66 8.29 9.13 8.69 8.69M9.88 9.88C10.32 9.48 10.85 9.19 11.42 9.04C12.73 8.73 14.06 9.27 14.99 10.2C15.92 11.13 16.46 12.46 16.15 13.77C16 14.34 15.71 14.87 15.31 15.31M1 1L23 23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                             <div class="form-check mb-3">
                                 <input class="form-check-input" type="checkbox" value="" id="loginAgree" checked>

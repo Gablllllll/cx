@@ -377,6 +377,41 @@ $total_feedback = $avg_data['total_feedback'];
             const voiceSelect = document.getElementById('voiceSelect');
             let voices = [];
 
+            // Detect if device is mobile (phone or tablet)
+            function isMobileDevice() {
+                return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                       (window.innerWidth <= 768);
+            }
+
+            // Get default voice: prefer David on mobile, otherwise prefer en-US
+            function getDefaultVoice() {
+                const isMobile = isMobileDevice();
+                
+                if (isMobile) {
+                    // On mobile, prefer David voice
+                    const davidVoice = voices.find(v => 
+                        v.name.toLowerCase().includes('david') && 
+                        (v.lang.startsWith('en-US') || v.lang.startsWith('en'))
+                    );
+                    if (davidVoice) return davidVoice;
+                    
+                    // Fallback: any en-US voice
+                    const enUSVoice = voices.find(v => v.lang.startsWith('en-US'));
+                    if (enUSVoice) return enUSVoice;
+                } else {
+                    // On desktop, prefer en-US voices
+                    const enUSVoice = voices.find(v => v.lang.startsWith('en-US'));
+                    if (enUSVoice) return enUSVoice;
+                }
+                
+                // Fallback: any English voice
+                const enVoice = voices.find(v => v.lang.startsWith('en'));
+                if (enVoice) return enVoice;
+                
+                // Last resort: first voice
+                return voices[0];
+            }
+
             let pdfText = '';
             let currentWord = '';
             let wordBoundaries = [];
@@ -1044,10 +1079,8 @@ $total_feedback = $avg_data['total_feedback'];
                     if (selectedVoiceIndex !== '') {
                         selectedVoice = voices[selectedVoiceIndex];
                     } else {
-                        // When "Select Voice" is chosen, prefer en-US voices
-                        const enUSVoice = voices.find(v => v.lang.startsWith('en-US'));
-                        const enVoice = voices.find(v => v.lang.startsWith('en'));
-                        selectedVoice = enUSVoice || enVoice || voices[0];
+                        // When "Select Voice" is chosen, use default voice logic (David on mobile, en-US on desktop)
+                        selectedVoice = getDefaultVoice();
                     }
                     if (selectedVoice) {
                         utterance.voice = selectedVoice;
@@ -1202,10 +1235,8 @@ $total_feedback = $avg_data['total_feedback'];
                 if (selectedVoiceIndex !== '') {
                     selectedVoice = voices[selectedVoiceIndex];
                 } else {
-                    // When "Select Voice" is chosen, prefer en-US voices
-                    const enUSVoice = voices.find(v => v.lang.startsWith('en-US'));
-                    const enVoice = voices.find(v => v.lang.startsWith('en'));
-                    selectedVoice = enUSVoice || enVoice || voices[0];
+                    // When "Select Voice" is chosen, use default voice logic (David on mobile, en-US on desktop)
+                    selectedVoice = getDefaultVoice();
                 }
                 if (selectedVoice) {
                     utterance.voice = selectedVoice;
@@ -1215,6 +1246,7 @@ $total_feedback = $avg_data['total_feedback'];
 
             voiceSelect.addEventListener('change', () => {
                 if (utterance) {
+                    
                     window.speechSynthesis.cancel();
                     utterance = null;
                     playPauseBtn.textContent = '▶️ Play';
@@ -1304,10 +1336,8 @@ $total_feedback = $avg_data['total_feedback'];
 				if (selectedVoiceIndex !== '') {
 					selectedVoice = voices[selectedVoiceIndex];
 				} else {
-					// When "Select Voice" is chosen, prefer en-US voices
-					const enUSVoice = voices.find(v => v.lang.startsWith('en-US'));
-					const enVoice = voices.find(v => v.lang.startsWith('en'));
-					selectedVoice = enUSVoice || enVoice || voices[0];
+					// When "Select Voice" is chosen, use default voice logic (David on mobile, en-US on desktop)
+					selectedVoice = getDefaultVoice();
 				}
 				if (selectedVoice) {
 					utterance.voice = selectedVoice;

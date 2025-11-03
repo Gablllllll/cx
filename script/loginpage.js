@@ -306,5 +306,49 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Password toggle functionality
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('eyeIcon');
+    const eyeOffIcon = document.getElementById('eyeOffIcon');
+
+    if (togglePassword && passwordInput) {
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Toggle icon visibility
+            if (type === 'text') {
+                eyeIcon.style.display = 'none';
+                eyeOffIcon.style.display = 'block';
+            } else {
+                eyeIcon.style.display = 'block';
+                eyeOffIcon.style.display = 'none';
+            }
+        });
+    }
+
+    // Login password toggle functionality
+    const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+    const loginPasswordInput = document.getElementById('loginPassword');
+    const eyeIconLogin = document.getElementById('eyeIconLogin');
+    const eyeOffIconLogin = document.getElementById('eyeOffIconLogin');
+
+    if (toggleLoginPassword && loginPasswordInput) {
+        toggleLoginPassword.addEventListener('click', function() {
+            const type = loginPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            loginPasswordInput.setAttribute('type', type);
+            
+            // Toggle icon visibility
+            if (type === 'text') {
+                eyeIconLogin.style.display = 'none';
+                eyeOffIconLogin.style.display = 'block';
+            } else {
+                eyeIconLogin.style.display = 'block';
+                eyeOffIconLogin.style.display = 'none';
+            }
+        });
+    }
+
     console.log('All event listeners set up successfully');
 });
