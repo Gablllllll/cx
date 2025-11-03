@@ -350,5 +350,41 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Phone number input restriction - only allow numbers
+    const phoneNumberInput = document.getElementById('phonenumber');
+    if (phoneNumberInput) {
+        phoneNumberInput.addEventListener('input', function(e) {
+            // Remove any non-digit characters
+            this.value = this.value.replace(/\D/g, '');
+        });
+
+        // Prevent non-numeric characters from being pasted
+        phoneNumberInput.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const numbersOnly = paste.replace(/\D/g, '');
+            this.value = numbersOnly;
+        });
+
+        // Prevent non-numeric keys from being typed
+        phoneNumberInput.addEventListener('keydown', function(e) {
+            // Allow: backspace, delete, tab, escape, enter, decimal point
+            if ([46, 8, 9, 27, 13, 110].indexOf(e.keyCode) !== -1 ||
+                // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                (e.keyCode === 65 && e.ctrlKey === true) ||
+                (e.keyCode === 67 && e.ctrlKey === true) ||
+                (e.keyCode === 86 && e.ctrlKey === true) ||
+                (e.keyCode === 88 && e.ctrlKey === true) ||
+                // Allow: home, end, left, right
+                (e.keyCode >= 35 && e.keyCode <= 39)) {
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+    }
+
     console.log('All event listeners set up successfully');
 });

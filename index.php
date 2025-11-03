@@ -283,7 +283,7 @@ if (isset($_POST['login'])) {
                             <h5 class="mb-3 text-center">Additional Information</h5>
                             <div class="mb-3">
                                 <label for="phonenumber" class="form-label">Phone Number</label>
-                                <input type="text" class="form-control" id="phonenumber" name="phonenumber" placeholder="Type Here">
+                                <input type="tel" class="form-control" id="phonenumber" name="phonenumber" placeholder="Type Here" pattern="[0-9]*" inputmode="numeric">
                             </div>
                             <div class="mb-3">
                                 <label for="address" class="form-label">Address</label>
