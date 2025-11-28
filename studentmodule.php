@@ -169,6 +169,11 @@ if (isset($_SESSION['user_id'])) {
 
 
     <div class="sidebar" id="sidebar">
+        <div class="sidebar-burger" onclick="toggleSidebar()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
         <div class="sidebar-content">
             <ul class="sidebar-nav">
                 <li><a href="landingpage.php"><img src="Images/home-svgrepo-com.svg" alt="Home Icon"> Home</a></li>

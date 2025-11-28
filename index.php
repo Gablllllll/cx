@@ -187,6 +187,11 @@ if (isset($_POST['login'])) {
     </main>
   <!-- Sidebar -->
     <div class="sidebar active" id="sidebar">
+        <div class="sidebar-burger" onclick="toggleSidebar()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
         <ul>
 
             <li><a href="#"><img src="Images/home-svgrepo-com.svg" alt="Home Icon"> Home</a></li>

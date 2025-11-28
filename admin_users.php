@@ -108,7 +108,6 @@ mysqli_free_result($stats_result);
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>User Management - ClassXic</title>
-	<link rel="stylesheet" href="css/modules.css">
 	<link rel="stylesheet" href="css/admin.css">
 	<link rel="stylesheet" href="css/admin_users.css">
 </head>

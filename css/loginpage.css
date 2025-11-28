@@ -14,8 +14,8 @@ body {
 }
 @font-face {
   font-family: 'OpenDyslexic';
-  src: url('fonts/OpenDyslexic-Bold.otf') format('opentype'),
-      url('fonts/OpenDyslexic-Regular.otf') format('opentype');
+  src: url('../fonts/OpenDyslexic-Bold.otf') format('opentype'),
+      url('../fonts/OpenDyslexic-Regular.otf') format('opentype');
   font-display: swap;
 }
 /* Modern Navigation */
@@ -92,7 +92,7 @@ body {
   width: 350px;
   height: 100%;
   background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
-  padding: 2rem;
+  padding: 0;
   box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
   transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 10000;
@@ -101,6 +101,32 @@ body {
 }
 .sidebar.active {
     left: 0;
+}
+
+.sidebar-burger {
+  position: absolute;
+  top: 1rem;
+  left: 18rem;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  z-index: 10001;
+}
+
+.sidebar-burger:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-burger div {
+  width: 24px;
+  height: 2px;
+  background: linear-gradient(90deg, #4a5568, #2d3748);
+  margin: 3px 0;
+  border-radius: 2px;
+  transition: transform 0.3s ease;
 }
 
 /* Sidebar Backdrop */
@@ -124,7 +150,7 @@ body {
 }
 .sidebar ul {
     list-style: none;
-    padding: 0;
+    padding: 5.5rem 2rem 2rem 2rem;
     margin: 0;
 }
 .sidebar ul li {
@@ -1479,6 +1505,10 @@ body.sidebar-hidden .site-footer {
   .navbar {
     padding: 1rem;
   }
+  /* Pull in the sidebar hamburger on small screens */
+  .sidebar-burger {
+    left: calc(100% - 56px);
+  }
   
   .nav-center {
     font-size: 1.5rem;
@@ -1582,6 +1612,10 @@ body.sidebar-hidden .site-footer {
 @media (max-width: 480px) {
   .navbar {
     padding: 0.75rem 1rem;
+  }
+  /* Slightly tighter on extra small phones */
+  .sidebar-burger {
+    left: calc(100% - 48px);
   }
 
   .nav-center {

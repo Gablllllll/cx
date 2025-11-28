@@ -310,7 +310,9 @@ if (isset($_SESSION['user_id'])) {
         <div class="about-text">
             <h1>About Us.</h1>
             <p>
-            ClassXic is a dyslexic-friendly LMS is an accessible learning platform designed to support students with dyslexia. It features readable fonts, clear navigation, minimal distractions, high-contrast themes, and text-to-speech options to enhance comprehension and create an inclusive educational environment.
+            ClassXic is a dyslexic-friendly LMS is an accessible learning platform designed to support students with dyslexia.
+             It features readable fonts, clear navigation, minimal distractions, high-contrast themes, and text-to-speech options to enhance 
+             comprehension and create an inclusive educational environment.
             </p>
         </div>
         <div class="about-image">
@@ -318,6 +320,11 @@ if (isset($_SESSION['user_id'])) {
         </div>
     </div>
     <div class="sidebar" id="sidebar">
+        <div class="sidebar-burger" onclick="toggleSidebar()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
         <div class="sidebar-content">
             <ul class="sidebar-nav">
                 <li><a href="landingpage.php"><img src="Images/home-svgrepo-com.svg" alt="Home Icon"> Home</a></li>

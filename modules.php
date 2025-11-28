@@ -92,6 +92,11 @@ $total_feedback = $avg_data['total_feedback'];
 
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
+        <div class="sidebar-burger" onclick="toggleSidebar()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
         <div class="sidebar-content">
             <ul class="sidebar-nav">
                 <li><a href="landingpage.php"><img src="Images/home-svgrepo-com.svg" alt="Home Icon"> Home</a></li>           
@@ -553,7 +558,7 @@ $total_feedback = $avg_data['total_feedback'];
 					}
 				} catch (e) { /* try fallback */ }
 
-				// 2) Fallback: dictionaryapi.dev with lemmatized variants
+				
 				const variants = generateDictionaryVariants(lower);
 				for (let i = 0; i < variants.length; i++) {
 					const q = variants[i];
@@ -943,7 +948,7 @@ $total_feedback = $avg_data['total_feedback'];
             function populateVoices() {
                 voices = window.speechSynthesis.getVoices();
                 
-                // Filter and sort voices: prioritize en-US voices first
+             
                 const enUSVoices = voices.filter(v => v.lang.startsWith('en-US'));
                 const otherEnVoices = voices.filter(v => v.lang.startsWith('en') && !v.lang.startsWith('en-US'));
                 const otherVoices = voices.filter(v => !v.lang.startsWith('en'));
@@ -1246,7 +1251,6 @@ $total_feedback = $avg_data['total_feedback'];
 
             voiceSelect.addEventListener('change', () => {
                 if (utterance) {
-                    
                     window.speechSynthesis.cancel();
                     utterance = null;
                     playPauseBtn.textContent = '▶️ Play';

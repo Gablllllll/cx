@@ -14,8 +14,8 @@ body {
 }
 @font-face {
   font-family: 'OpenDyslexic';
-  src: url('fonts/OpenDyslexic-Bold.otf') format('opentype'),
-      url('fonts/OpenDyslexic-Regular.otf') format('opentype');
+  src: url('../fonts/OpenDyslexic-Bold.otf') format('opentype'),
+      url('../fonts/OpenDyslexic-Regular.otf') format('opentype');
   font-display: swap;
 }
 /* Modern Navigation */
@@ -142,6 +142,7 @@ body {
   border-bottom: 1px solid rgba(226, 232, 240, 0.3);
   position: relative;
   overflow: hidden;
+  white-space: nowrap; /* keep label on one line */
 }
 
 .user-dropdown a::before {
@@ -173,7 +174,7 @@ body {
   width: 350px;
   height: 100%;
   background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
-  padding: 2rem;
+  padding: 0;
   box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
   transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 10000;
@@ -189,9 +190,36 @@ body {
   left: -400px;
 }
 
+.sidebar-burger {
+  position: absolute;
+  top: 1rem;
+  left: 18rem;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  z-index: 10001;
+}
+
+.sidebar-burger:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-burger div {
+  width: 24px;
+  height: 2px;
+  background: linear-gradient(90deg, #4a5568, #2d3748);
+  margin: 3px 0;
+  border-radius: 2px;
+  transition: transform 0.3s ease;
+}
+
 .sidebar-content {
   display: flex;
   flex-direction: column;
+  padding: 5.5rem 2rem 2rem 2rem; /* Top padding to align with main content (120px - navbar height) */
   height: 100%;
 }
 
